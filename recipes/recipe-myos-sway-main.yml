@@ -1,0 +1,15 @@
+name: myos-sway-main
+description: my personal os sway image
+base-image: ghcr.io/wayblueorg/sway
+image-version: 40
+
+modules:
+  modules:
+  - from-file: default-files.yml
+  - from-file: packages.yml
+  - from-file: docker.yml
+  - from-file: virtualization.yml
+  - from-file: fonts.yml
+  - from-file: just.yml
+  - from-file: flatpaks.yml
+  - type: signing
