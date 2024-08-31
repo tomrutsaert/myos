@@ -1,0 +1,4 @@
+modules:
+  - type: justfiles
+    include: 
+      - myjust.just

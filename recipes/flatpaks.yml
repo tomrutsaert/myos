@@ -1,0 +1,17 @@
+modules:
+  - type: default-flatpaks
+    notify: true
+    system:
+      install:
+        - com.slack.Slack
+        - io.dbeaver.DBeaverCommunity
+        - com.nextcloud.desktopclient.nextcloud
+        - org.chromium.Chromium
+        - org.telegram.desktop
+        - com.spotify.Client
+        - com.microsoft.Edge
+        - com.discordapp.Discord
+        - com.github.tchx84.Flatseal
+        - it.mijorus.gearlever
+        - io.missioncenter.MissionCenter
+        - com.mattjakeman.ExtensionManager

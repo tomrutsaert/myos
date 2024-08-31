@@ -1,0 +1,15 @@
+name: myos-gnome-nvidia
+description: my personal os gnome nvidia image
+base-image: ghcr.io/ublue-os/silverblue-nvidia
+image-version: 40
+
+modules:
+  - from-file: default-files.yml
+  - from-file: packages.yml
+  - from-file: docker.yml
+  - from-file: virtualization.yml
+  - from-file: fonts.yml
+  - from-file: just.yml
+  - from-file: flatpaks.yml
+  - from-file: gnome.yml
+  - type: signing

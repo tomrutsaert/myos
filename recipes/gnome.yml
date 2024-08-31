@@ -1,0 +1,7 @@
+modules:
+  - type: gnome-extensions
+    install:
+      - 16 # https://extensions.gnome.org/extension/16/auto-move-windows/
+      - 517 # https://extensions.gnome.org/extension/517/caffeine/
+      - 1160 # https://extensions.gnome.org/extension/1160/dash-to-panel/
+      - 2236 # https://extensions.gnome.org/extension/2236/night-theme-switcher/
