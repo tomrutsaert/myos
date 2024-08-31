@@ -1,5 +1,5 @@
-name: myos-sway-main
-description: my personal os sway image
+name: myos-sway-nvidia
+description: my personal os sway nvidia image
 base-image: ghcr.io/wayblueorg/sway-nvidia
 image-version: 40
 
