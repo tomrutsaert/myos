@@ -4,7 +4,6 @@ base-image: ghcr.io/wayblueorg/sway-nvidia
 image-version: 40
 
 modules:
-  modules:
   - from-file: default-files.yml
   - from-file: packages.yml
   - from-file: docker.yml
