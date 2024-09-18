@@ -3,15 +3,21 @@ modules:
     notify: true
     system:
       install:
-        - com.slack.Slack
-        - io.dbeaver.DBeaverCommunity
-        - com.nextcloud.desktopclient.nextcloud
-        - org.chromium.Chromium
-        - org.telegram.desktop
-        - com.spotify.Client
-        - com.microsoft.Edge
         - com.discordapp.Discord
+        - com.github.maoschanz.drawing
+        - com.github.rafostar.Clapper
         - com.github.tchx84.Flatseal
-        - it.mijorus.gearlever
-        - io.missioncenter.MissionCenter
+        - com.jeffser.Alpaca
         - com.mattjakeman.ExtensionManager
+        - com.microsoft.Edge
+        - com.nextcloud.desktopclient.nextcloud
+        - com.slack.Slack
+        - com.spotify.Client
+        - io.dbeaver.DBeaverCommunity
+        - io.missioncenter.MissionCenter
+        - io.podman_desktop.PodmanDesktop
+        - it.mijorus.gearlever
+        - org.chromium.Chromium
+        - org.gimp.GIMP
+        - org.mozilla.firefox
+        - org.telegram.desktop
