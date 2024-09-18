@@ -4,16 +4,23 @@ See the [BlueBuild docs](https://blue-build.org/how-to/setup/) for quick setup i
 
 After setup, it is recommended you update this README to describe your custom image.
 
+## Available Images
+
+- myos-gnome-main
+- myos-gnome-nvidia
+- myos-sway-main
+- myos-sway-nvidia
+
 ## Installation
 
-> **Warning**  
+> **Warning**
 > [This is an experimental feature](https://www.fedoraproject.org/wiki/Changes/OstreeNativeContainerStable), try at your own discretion.
 
 To rebase an existing atomic Fedora installation to the latest build:
 
 - First rebase to the unsigned image, to get the proper signing keys and policies installed:
   ```
-  rpm-ostree rebase ostree-unverified-registry:ghcr.io/tomrutsaert/myos:latest
+  rpm-ostree rebase ostree-unverified-registry:ghcr.io/tomrutsaert/myos-gnome-main:latest
   ```
 - Reboot to complete the rebase:
   ```
@@ -21,7 +28,7 @@ To rebase an existing atomic Fedora installation to the latest build:
   ```
 - Then rebase to the signed image, like so:
   ```
-  rpm-ostree rebase ostree-image-signed:docker://ghcr.io/tomrutsaert/myos:latest
+  rpm-ostree rebase ostree-image-signed:docker://ghcr.io/tomrutsaert/myos-gnome-main:latest
   ```
 - Reboot again to complete the installation
   ```
