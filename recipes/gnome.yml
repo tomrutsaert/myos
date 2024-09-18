@@ -6,3 +6,6 @@ modules:
       - 615 # https://extensions.gnome.org/extension/615/appindicator-support/
       - 1160 # https://extensions.gnome.org/extension/1160/dash-to-panel/
       - 2236 # https://extensions.gnome.org/extension/2236/night-theme-switcher/
+  - type: gschema-overrides
+    include:
+      - zz1-myos.gschema.override
