@@ -13,11 +13,13 @@ modules:
         - com.nextcloud.desktopclient.nextcloud
         - com.slack.Slack
         - com.spotify.Client
+        - dev.zed.Zed
         - io.dbeaver.DBeaverCommunity
         - io.missioncenter.MissionCenter
         - io.podman_desktop.PodmanDesktop
         - it.mijorus.gearlever
         - org.chromium.Chromium
+        - org.geany.Geany
         - org.gimp.GIMP
         - org.mozilla.firefox
         - org.telegram.desktop

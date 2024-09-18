@@ -2,10 +2,3 @@
 close = ['<Super><shift>q']
 cycle-windows = ['<Super>Escape']
 cycle-windows-backward = ['<Super><Shift>Escape']
-
-[org.gnome.desktop.background]
-color-shading-type = 'solid'
-picture-uri = none
-picture-uri-dark = none
-secondary-color = '#000000'
-primary-color = '#000000'
