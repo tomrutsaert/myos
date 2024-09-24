@@ -5,6 +5,7 @@ modules:
       - 517 # https://extensions.gnome.org/extension/517/caffeine/
       - 615 # https://extensions.gnome.org/extension/615/appindicator-support/
       - 1160 # https://extensions.gnome.org/extension/1160/dash-to-panel/
+      - 1336 # https://extensions.gnome.org/extension/1336/run-or-raise/
       - 2236 # https://extensions.gnome.org/extension/2236/night-theme-switcher/
   - type: gschema-overrides
     include:

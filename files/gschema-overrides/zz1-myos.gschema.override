@@ -2,3 +2,9 @@
 close = ['<Super><shift>q']
 cycle-windows = ['<Super>Escape']
 cycle-windows-backward = ['<Super><Shift>Escape']
+
+[org.gnome.mutter]
+center-new-windows = true
+
+[org.gnome.shell.keybindings]
+toggle-quick-settings = ['']
