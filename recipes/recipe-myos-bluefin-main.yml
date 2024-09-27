@@ -5,7 +5,21 @@ image-version: stable
 
 modules:
   - from-file: default-files.yml
-  - from-file: packages.yml
+
+  - type: rpm-ostree
+    repos:
+      - https://copr.fedorainfracloud.org/coprs/atim/starship/repo/fedora-40/atim-starship-fedora-40.repo
+    install:
+      - stow
+      - gum
+      - starship
+      - hplip
+      - solaar
+      - iotop
+      - powertop
+      - btop
+      - bpftop
+
   # - from-file: docker.yml
   # - from-file: virtualization.yml
   - from-file: fonts.yml
