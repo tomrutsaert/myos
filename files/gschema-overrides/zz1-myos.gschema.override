@@ -8,3 +8,183 @@ center-new-windows = true
 
 [org.gnome.shell.keybindings]
 toggle-quick-settings = ['']
+
+[org.gnome.shell]
+disable-user-extensions=false
+disabled-extensions=['background-logo@fedorahosted.org', 'auto-move-windows@gnome-shell-extensions.gcampax.github.com']
+enabled-extensions=['caffeine@patapon.info', 'dash-to-panel@jderose9.github.com', 'nightthemeswitcher@romainvigier.fr', 'appindicatorsupport@rgcjonas.gmail.com']
+
+[org.gnome.shell.extensions.appindicator]
+custom-icons=@a(sss) []
+icon-brightness=0.0
+icon-contrast=0.0
+icon-opacity=240
+icon-saturation=0.0
+icon-size=0
+icon-spacing=12
+legacy-tray-enabled=true
+tray-order=1
+tray-pos='right'
+
+[org.gnome.shell.extensions.caffeine]
+countdown-timer=0
+duration-timer=2
+duration-timer-list=[900, 1800, 3600]
+enable-fullscreen=true
+indicator-position=0
+indicator-position-index=0
+indicator-position-max=1
+inhibit-apps=@as []
+nightlight-control='never'
+prefs-default-height=590
+prefs-default-width=570
+restore-state=false
+screen-blank='never'
+show-indicator='only-active'
+show-notifications=true
+show-timer=true
+toggle-shortcut=@as []
+toggle-state=false
+trigger-apps-mode='on-running'
+use-custom-duration=false
+user-enabled=false
+
+[org.gnome.shell.extensions.dash-to-panel]
+activate-single-window=true
+animate-app-switch=true
+animate-appicon-hover=false
+animate-window-launch=true
+appicon-margin=4
+appicon-padding=4
+appicon-style='NORMAL'
+available-monitors=[0, 1]
+click-action='CYCLE-MIN'
+customize-click=true
+desktop-line-custom-color='rgba(200,200,200,0.2)'
+desktop-line-use-custom-color=false
+dot-color-dominant=false
+dot-color-override=false
+dot-position='BOTTOM'
+dot-size=3
+dot-style-focused='DOTS'
+dot-style-unfocused='DOTS'
+enter-peek-mode-timeout=500
+focus-highlight=true
+focus-highlight-color='#1a5fb4'
+focus-highlight-dominant=false
+focus-highlight-opacity=75
+group-apps=true
+hide-overview-on-startup=true
+hot-keys=true
+hotkey-prefix-text='Super'
+hotkeys-overlay-combo='TEMPORARILY'
+intellihide=true
+intellihide-animation-time=10
+intellihide-behaviour='FOCUSED_WINDOWS'
+intellihide-close-delay=200
+intellihide-enable-start-delay=2000
+intellihide-hide-from-windows=true
+intellihide-key-toggle=['<Super>i']
+intellihide-key-toggle-text='<Super>i'
+intellihide-only-secondary=false
+intellihide-pressure-threshold=100
+intellihide-pressure-time=1000
+intellihide-show-in-fullscreen=false
+intellihide-use-pressure=false
+isolate-monitors=false
+isolate-workspaces=false
+leave-timeout=100
+leftbox-padding=-1
+leftbox-size=0
+middle-click-action='LAUNCH'
+minimize-shift=true
+multi-monitors=false
+overlay-timeout=750
+overview-click-to-exit=true
+panel-anchors='{"0":"MIDDLE","1":"MIDDLE","2":"MIDDLE"}'
+panel-context-menu-commands=@as []
+panel-context-menu-titles=@as []
+panel-element-positions='{"0":[{"element":"showAppsButton","visible":false,"position":"stackedTL"},{"element":"activitiesButton","visible":false,"position":"stackedTL"},{"element":"leftBox","visible":false,"position":"stackedTL"},{"element":"taskbar","visible":true,"position":"stackedTL"},{"element":"centerBox","visible":false,"position":"centered"},{"element":"dateMenu","visible":true,"position":"centered"},{"element":"rightBox","visible":true,"position":"stackedBR"},{"element":"systemMenu","visible":true,"position":"stackedBR"},{"element":"desktopButton","visible":false,"position":"stackedBR"}],"1":[{"element":"showAppsButton","visible":false,"position":"stackedTL"},{"element":"activitiesButton","visible":false,"position":"stackedTL"},{"element":"leftBox","visible":false,"position":"stackedTL"},{"element":"taskbar","visible":true,"position":"stackedTL"},{"element":"centerBox","visible":false,"position":"centered"},{"element":"dateMenu","visible":true,"position":"centered"},{"element":"rightBox","visible":true,"position":"stackedBR"},{"element":"systemMenu","visible":true,"position":"stackedBR"},{"element":"desktopButton","visible":false,"position":"stackedBR"}],"2":[{"element":"showAppsButton","visible":false,"position":"stackedTL"},{"element":"activitiesButton","visible":false,"position":"stackedTL"},{"element":"leftBox","visible":false,"position":"stackedTL"},{"element":"taskbar","visible":true,"position":"stackedTL"},{"element":"centerBox","visible":false,"position":"centered"},{"element":"dateMenu","visible":true,"position":"centered"},{"element":"rightBox","visible":true,"position":"stackedBR"},{"element":"systemMenu","visible":true,"position":"stackedBR"},{"element":"desktopButton","visible":false,"position":"stackedBR"}]}'
+panel-element-positions-monitors-sync=true
+panel-lengths='{"0":40,"1":40,"2":40}'
+panel-position='BOTTOM'
+panel-positions='{}'
+panel-size=48
+panel-sizes='{"0":26,"1":26,"2":26}'
+peek-mode=true
+peek-mode-opacity=40
+preview-custom-opacity=80
+preview-middle-click-close=true
+preview-use-custom-opacity=true
+primary-monitor=0
+progress-show-bar=true
+progress-show-count=true
+scroll-icon-action='CYCLE_WINDOWS'
+scroll-icon-delay=0
+scroll-panel-action='SWITCH_WORKSPACE'
+scroll-panel-delay=0
+scroll-panel-show-ws-popup=true
+secondarymenu-contains-appmenu=true
+secondarymenu-contains-showdetails=false
+shift-click-action='MINIMIZE'
+shift-middle-click-action='LAUNCH'
+shortcut=['<Super>q']
+shortcut-num-keys='BOTH'
+shortcut-previews=false
+shortcut-text='<Super>q'
+shortcut-timeout=2000
+show-activities-button=false
+show-apps-button-context-menu-commands=@as []
+show-apps-button-context-menu-titles=@as []
+show-apps-icon-file=''
+show-apps-icon-side-padding=8
+show-apps-override-escape=true
+show-favorites=true
+show-favorites-all-monitors=true
+show-running-apps=true
+show-showdesktop-delay=1000
+show-showdesktop-hover=false
+show-showdesktop-time=300
+show-tooltip=false
+show-window-previews=false
+show-window-previews-timeout=400
+showdesktop-button-width=8
+status-icon-padding=-1
+stockgs-force-hotcorner=false
+stockgs-keep-dash=false
+stockgs-keep-top-panel=false
+stockgs-panelbtn-click-only=false
+taskbar-locked=false
+tray-padding=-1
+tray-size=0
+
+[org.gnome.shell.extensions.nightthemeswitcher]
+settings-version=0
+color-scheme day='default'
+color-scheme night='prefer-dark'
+commands enabled=false
+commands sunrise=''
+commands sunset=''
+time fullscreen-transition=true
+time location=(91.0, 181.0)
+time manual-schedule=true
+time nightthemeswitcher-ondemand-keybinding=['<Shift><Super>t']
+time offset=0.4
+time sunrise=6.0
+time sunset=20.0
+
+[org.gnome.shell.extensions.run-or-raise]
+center-mouse-to-focused-window=false
+isolate-workspace=false
+minimize-when-unfocused=false
+move-window-to-active-workspace=false
+switch-back-when-focused=false
+verbose=false
+
+[org.gnome.shell.extensions.window-list]
+display-all-workspaces=false
+grouping-mode='never'
+show-on-all-monitors=false
+
+[org.gnome.tweaks]
+show-extensions-notice=false

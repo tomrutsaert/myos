@@ -1,11 +1,11 @@
 name: bluebuild
 on:
   schedule:
-    - cron: "00 18 * * 5" 
+    - cron: "00 18 * * 5"
   push:
     paths-ignore:
       - "**.md"
-      
+
   pull_request:
   workflow_dispatch:
 jobs:
@@ -20,6 +20,7 @@ jobs:
       fail-fast: false
       matrix:
         recipe:
+          - recipe-myos-bluefin-main.yml
           - recipe-myos-gnome-main.yml
           - recipe-myos-gnome-nvidia.yml
           - recipe-myos-sway-main.yml
@@ -32,5 +33,5 @@ jobs:
           recipe: ${{ matrix.recipe }}
           cosign_private_key: ${{ secrets.SIGNING_SECRET }}
           registry_token: ${{ github.token }}
-          pr_event_number: ${{ github.event.number }} 
+          pr_event_number: ${{ github.event.number }}
           maximize_build_space: true

@@ -1,0 +1,15 @@
+name: myos-bluefin-main
+description: my personal os bluefin image
+base-image: ghcr.io/ublue-os/bluefin-dx
+image-version: stable
+
+modules:
+  - from-file: default-files.yml
+  - from-file: packages.yml
+  # - from-file: docker.yml
+  # - from-file: virtualization.yml
+  - from-file: fonts.yml
+  - from-file: just.yml
+  - from-file: flatpaks.yml
+  - from-file: gnome.yml
+  - type: signing
