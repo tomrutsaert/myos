@@ -12,6 +12,7 @@ modules:
       - powertop
       - btop
       - bpftop
+      - waydroid
     remove:
       - firefox
       - firefox-langpacks
