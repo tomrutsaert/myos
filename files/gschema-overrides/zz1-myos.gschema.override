@@ -1,3 +1,11 @@
+[org.gnome.desktop.background]
+color-shading-type='solid'
+picture-options='zoom'
+picture-uri='none'
+picture-uri-dark='none'
+primary-color='#000000'
+secondary-color='#000000'
+
 [org.gnome.desktop.wm.keybindings]
 close = ['<Super><shift>q']
 cycle-windows = ['<Super>Escape']
@@ -5,14 +13,16 @@ cycle-windows-backward = ['<Super><Shift>Escape']
 
 [org.gnome.mutter]
 center-new-windows = true
+edge-tiling=false
 
 [org.gnome.shell.keybindings]
 toggle-quick-settings = ['']
 
 [org.gnome.shell]
 disable-user-extensions=false
-disabled-extensions=['background-logo@fedorahosted.org', 'auto-move-windows@gnome-shell-extensions.gcampax.github.com']
-enabled-extensions=['caffeine@patapon.info', 'dash-to-panel@jderose9.github.com', 'nightthemeswitcher@romainvigier.fr', 'appindicatorsupport@rgcjonas.gmail.com']
+disabled-extensions=['background-logo@fedorahosted.org', 'auto-move-windows@gnome-shell-extensions.gcampax.github.com', 'nightthemeswitcher@romainvigier.fr']
+enabled-extensions=['caffeine@patapon.info', 'dash-to-panel@jderose9.github.com', 'appindicatorsupport@rgcjonas.gmail.com', 'run-or-raise@edvard.cz', 'dim-background-windows@stephane-13.github.com']
+favorite-apps=['org.gnome.Terminal.desktop', 'org.mozilla.firefox.desktop', 'dev.zed.Zed.desktop', 'doccle-fedora-jetbrains-idea.desktop']
 
 [org.gnome.shell.extensions.appindicator]
 custom-icons=@a(sss) []
@@ -79,18 +89,10 @@ hot-keys=true
 hotkey-prefix-text='Super'
 hotkeys-overlay-combo='TEMPORARILY'
 intellihide=true
-intellihide-animation-time=10
-intellihide-behaviour='FOCUSED_WINDOWS'
+intellihide-animation-time=200
 intellihide-close-delay=200
-intellihide-enable-start-delay=2000
-intellihide-hide-from-windows=true
-intellihide-key-toggle=['<Super>i']
-intellihide-key-toggle-text='<Super>i'
-intellihide-only-secondary=false
-intellihide-pressure-threshold=100
-intellihide-pressure-time=1000
+intellihide-hide-from-windows=false
 intellihide-show-in-fullscreen=false
-intellihide-use-pressure=false
 isolate-monitors=false
 isolate-workspaces=false
 leave-timeout=100
@@ -157,6 +159,13 @@ stockgs-panelbtn-click-only=false
 taskbar-locked=false
 tray-padding=-1
 tray-size=0
+
+[org.gnome.shell.extensions.dim-background-windows]
+brightness=0.80
+dimming-enabled=true
+saturation=0.80
+target-monitor='all'
+toggle-shortcut=['<Super>g']
 
 [org.gnome.shell.extensions.run-or-raise]
 center-mouse-to-focused-window=false
