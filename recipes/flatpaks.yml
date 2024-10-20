@@ -25,6 +25,7 @@ modules:
         - org.chromium.Chromium
         - org.geany.Geany
         - org.gimp.GIMP
+        - org.gnome.Loupe
         - org.gnome.Papers
         - org.gnome.TextEditor
         - org.libreoffice.LibreOffice
