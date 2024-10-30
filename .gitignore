@@ -1,5 +1,4 @@
 cosign.key
 cosign.private
 /Containerfile
-./iso-output
-./iso-output/*
+iso-output

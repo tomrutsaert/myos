@@ -1,7 +1,7 @@
 name: myos-gnome-nvidia
 description: my personal os gnome nvidia image
 base-image: ghcr.io/ublue-os/silverblue-nvidia
-image-version: 40
+image-version: 41
 
 modules:
   - from-file: default-files.yml
