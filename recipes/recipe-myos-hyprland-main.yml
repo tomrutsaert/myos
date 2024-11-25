@@ -6,7 +6,6 @@ image-version: 41
 modules:
   - from-file: default-files.yml
   - from-file: packages.yml
-  - from-file: distrobox.yml
   - from-file: docker.yml
   - from-file: virtualization.yml
   - from-file: fonts.yml

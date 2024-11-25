@@ -1,4 +1,0 @@
-modules:
-  - type: rpm-ostree
-    install:
-      - distrobox
