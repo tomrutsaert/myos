@@ -12,6 +12,7 @@ modules:
       - powertop
       - btop
       - bpftop
+      - flameshot
     remove:
       - firefox
       - firefox-langpacks
