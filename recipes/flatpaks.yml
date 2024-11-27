@@ -5,8 +5,6 @@ modules:
       install:
         - com.discordapp.Discord
         - com.github.wwmm.easyeffects
-        - com.github.maoschanz.drawing
-        - com.github.rafostar.Clapper
         - com.github.tchx84.Flatseal
         - com.jeffser.Alpaca
         - com.mattjakeman.ExtensionManager
@@ -28,6 +26,7 @@ modules:
         - org.gnome.Loupe
         - org.gnome.Papers
         - org.gnome.TextEditor
+        - org.kde.kolourpaint
         - org.libreoffice.LibreOffice
         - org.mozilla.firefox
         - org.telegram.desktop

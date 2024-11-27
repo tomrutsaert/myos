@@ -20,11 +20,10 @@ jobs:
       fail-fast: false
       matrix:
         recipe:
-          # - recipe-myos-bluefin-main.yml
           - recipe-myos-gnome-main.yml
           - recipe-myos-gnome-nvidia.yml
-          - recipe-myos-sway-main.yml
-          - recipe-myos-sway-nvidia.yml
+          # - recipe-myos-sway-main.yml
+          # - recipe-myos-sway-nvidia.yml
           - recipe-myos-hyprland-main.yml
           - recipe-myos-hyprland-nvidia.yml
 

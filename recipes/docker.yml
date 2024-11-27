@@ -1,8 +1,6 @@
-# installs (rootless) docker 
-# execute 'ujust enable-rootless-docker-for-user' as end user to finish setup 
 modules:
   - type: rpm-ostree
-    repos: 
+    repos:
       - https://download.docker.com/linux/fedora/docker-ce.repo
     install:
       - docker-ce
@@ -10,8 +8,6 @@ modules:
       - containerd.io
       - docker-buildx-plugin
       - docker-compose-plugin
-      #- fuse-overlayfs
-      #- iptables-utils
   - type: systemd
     system:
       enabled:
