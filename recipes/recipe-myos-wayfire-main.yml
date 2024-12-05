@@ -1,0 +1,14 @@
+name: myos-wayfire-main
+description: my personal os wayfire image
+base-image: ghcr.io/wayblueorg/wayfire
+image-version: 41
+
+modules:
+  - from-file: default-files.yml
+  - from-file: packages.yml
+  - from-file: docker.yml
+  - from-file: virtualization.yml
+  - from-file: fonts.yml
+  - from-file: just.yml
+  - from-file: flatpaks.yml
+  - type: signing
