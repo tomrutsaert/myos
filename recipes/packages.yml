@@ -13,6 +13,7 @@ modules:
       - powertop
       - btop
       - bpftop
+      - swappy
     remove:
       - firefox
       - firefox-langpacks

@@ -4,6 +4,9 @@ base-image: ghcr.io/ublue-os/silverblue-nvidia
 image-version: 41
 
 modules:
+  - type: akmods
+    install:
+      - openrazer
   - from-file: default-files.yml
   - from-file: packages.yml
   - from-file: docker.yml
