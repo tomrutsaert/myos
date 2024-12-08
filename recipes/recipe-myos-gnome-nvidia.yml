@@ -13,6 +13,5 @@ modules:
   - from-file: virtualization.yml
   - from-file: fonts.yml
   - from-file: just.yml
-  - from-file: flatpaks.yml
   - from-file: gnome.yml
   - type: signing

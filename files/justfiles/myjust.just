@@ -53,3 +53,34 @@ install-intellij:
     StartupWMClass=jetbrains-idea
     StartupNotify=true
     EOF
+
+install-flatpaks
+    sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+    flatpak install -y flathub \
+    com.discordapp.Discord \
+    com.github.wwmm.easyeffects \
+    com.github.tchx84.Flatseal \
+    com.mattjakeman.ExtensionManager \
+    com.jeffser.Alpaca \
+    com.microsoft.Edge \
+    com.nextcloud.desktopclient.nextcloud \
+    com.slack.Slack \
+    com.spotify.Client \
+    de.hohnstaedt.xca \
+    dev.zed.Zed \
+    io.dbeaver.DBeaverCommunity \
+    io.podman_desktop.PodmanDesktop \
+    io.gitlab.adhami3310.Converter \
+    io.gitlab.liferooter.TextPieces \
+    it.mijorus.gearlever \
+    org.chromium.Chromium \
+    org.geany.Geany \
+    org.gimp.GIMP \
+    org.gnome.Loupe \
+    org.gnome.Papers \
+    org.gnome.TextEditor \
+    org.kde.kolourpaint \
+    org.libreoffice.LibreOffice \
+    org.mozilla.firefox \
+    org.telegram.desktop \
+    org.videolan.VLC
