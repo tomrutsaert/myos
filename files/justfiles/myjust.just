@@ -54,7 +54,8 @@ install-intellij:
     StartupNotify=true
     EOF
 
-install-flatpaks
+install-flatpaks:
+    #!/usr/bin/bash
     sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
     flatpak install -y flathub \
     com.discordapp.Discord \
