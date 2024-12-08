@@ -8,7 +8,6 @@ modules:
       - starship
       - hplip
       - solaar
-      - openrazer-meta
       - iotop
       - powertop
       - btop
