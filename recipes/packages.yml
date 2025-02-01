@@ -13,6 +13,7 @@ modules:
       - btop
       - bpftop
       - swappy
+      - codium
     remove:
       - firefox
       - firefox-langpacks
