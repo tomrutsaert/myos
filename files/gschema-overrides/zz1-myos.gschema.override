@@ -67,7 +67,6 @@ animate-window-launch=true
 appicon-margin=4
 appicon-padding=4
 appicon-style='NORMAL'
-available-monitors=[0, 1]
 click-action='CYCLE-MIN'
 customize-click=true
 desktop-line-custom-color='rgba(200,200,200,0.2)'
