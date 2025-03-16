@@ -16,6 +16,7 @@ modules:
       - swappy
       - codium
       - net-tools
+      - lm_sensors
     remove:
       - firefox
       - firefox-langpacks
