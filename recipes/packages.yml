@@ -17,6 +17,9 @@ modules:
       - codium
       - net-tools
       - lm_sensors
+      - emacs
+      - ripgrep
+      - fd-find
     remove:
       - firefox
       - firefox-langpacks
