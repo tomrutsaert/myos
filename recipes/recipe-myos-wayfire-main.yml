@@ -1,7 +1,7 @@
 name: myos-wayfire-main
 description: my personal os wayfire image
 base-image: ghcr.io/wayblueorg/wayfire
-image-version: 41
+image-version: 42
 
 modules:
   - from-file: default-files.yml

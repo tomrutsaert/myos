@@ -1,7 +1,7 @@
 name: myos-gnome-main
 description: my personal os gnome image
 base-image: ghcr.io/ublue-os/silverblue-main
-image-version: 41
+image-version: 42
 
 modules:
   - from-file: default-files.yml

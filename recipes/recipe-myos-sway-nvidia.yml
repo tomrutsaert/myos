@@ -1,7 +1,7 @@
 name: myos-sway-nvidia
 description: my personal os sway nvidia image
 base-image: ghcr.io/wayblueorg/sway-nvidia
-image-version: 41
+image-version: 42
 
 modules:
   - from-file: default-files.yml
