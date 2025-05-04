@@ -9,25 +9,25 @@ modules:
       copr:
         - atim/starship
     install:
-        skip-unavailable: true # skip unavailable packages
-        packages:
-          - make
-          - stow
-          - gum
-          - starship
-          - hplip
-          - solaar
-          - iotop
-          - powertop
-          - btop
-          - bpftop
-          - swappy
-          - codium
-          - net-tools
-          - lm_sensors
-          - emacs
-          - ripgrep
-          - fd-find
+      skip-unavailable: true
+      packages:
+        - make
+        - stow
+        - gum
+        - starship
+        - hplip
+        - solaar
+        - iotop
+        - powertop
+        - btop
+        - bpftop
+        - swappy
+        - codium
+        - net-tools
+        - lm_sensors
+        - emacs
+        - ripgrep
+        - fd-find
     remove:
       packages:
         - firefox
