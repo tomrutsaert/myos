@@ -1,25 +1,34 @@
 modules:
-  - type: rpm-ostree
+  - type: dnf
     repos:
-      - https://copr.fedorainfracloud.org/coprs/atim/starship/repo/fedora-%OS_VERSION%/atim-starship-fedora-%OS_VERSION%.repo
+    cleanup: true
+    files:
+      - charm.repo
+      - hardware_razer.repo    
+      - vscodium.repo
+    copr:
+      - atim/starship
     install:
-      - make
-      - stow
-      - gum
-      - starship
-      - hplip
-      - solaar
-      - iotop
-      - powertop
-      - btop
-      - bpftop
-      - swappy
-      - codium
-      - net-tools
-      - lm_sensors
-      - emacs
-      - ripgrep
-      - fd-find
+        skip-unavailable: true # skip unavailable packages
+        packages:
+          - make
+          - stow
+          - gum
+          - starship
+          - hplip
+          - solaar
+          - iotop
+          - powertop
+          - btop
+          - bpftop
+          - swappy
+          - codium
+          - net-tools
+          - lm_sensors
+          - emacs
+          - ripgrep
+          - fd-find
     remove:
-      - firefox
-      - firefox-langpacks
+      packages:
+        - firefox
+        - firefox-langpacks

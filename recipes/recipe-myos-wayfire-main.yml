@@ -6,9 +6,10 @@ image-version: 42
 modules:
   - from-file: default-files.yml
   - from-file: packages.yml
-  - type: rpm-ostree
+  - type: dnf
     install:
-      - wdisplays
+      packages:
+        - wdisplays
   - from-file: docker.yml
   - from-file: virtualization.yml
   - from-file: fonts.yml
