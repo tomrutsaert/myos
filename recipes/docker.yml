@@ -1,7 +1,7 @@
 modules:
   - type: dnf
     repos:
-      cleanupo: true
+      cleanup: true
       files:
         - https://download.docker.com/linux/fedora/docker-ce.repo
     install:
