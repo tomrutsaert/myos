@@ -1,13 +1,13 @@
 modules:
   - type: dnf
     repos:
-    cleanup: true
-    files:
-      - charm.repo
-      - hardware_razer.repo    
-      - vscodium.repo
-    copr:
-      - atim/starship
+      cleanup: true
+      files:
+        - charm.repo
+        - hardware_razer.repo    
+        - vscodium.repo
+      copr:
+        - atim/starship
     install:
         skip-unavailable: true # skip unavailable packages
         packages:
