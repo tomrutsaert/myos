@@ -30,7 +30,6 @@ modules:
         - fd-find
         - wl-clipboard 
         - clipman
-        - xwayland-clipboard
     remove:
       packages:
         - firefox
