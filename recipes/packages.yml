@@ -30,6 +30,7 @@ modules:
         - fd-find
         - wl-clipboard 
         - clipman
+        - corectrl
     remove:
       packages:
         - firefox
