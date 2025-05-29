@@ -4,7 +4,6 @@ modules:
       cleanup: true
       files:
         - charm.repo
-        - hardware_razer.repo    
         - vscodium.repo
       copr:
         - atim/starship

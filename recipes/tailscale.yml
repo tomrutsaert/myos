@@ -1,0 +1,14 @@
+modules:
+  - type: dnf
+    repos:
+      cleanup: true
+      files:
+        - https://pkgs.tailscale.com/stable/fedora/tailscale.repo
+    install:
+      skip-unavailable: true
+      packages:
+        - tailscale
+  - type: systemd
+    system:
+      enabled:
+        - tailscaled
