@@ -10,4 +10,5 @@ modules:
   - from-file: virtualization.yml
   - from-file: fonts.yml
   - from-file: just.yml
+  - from-file: tailscale.yml
   - type: signing
