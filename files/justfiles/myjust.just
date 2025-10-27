@@ -7,9 +7,10 @@ enable-rootless-docker-for-user:
     /usr/bin/dockerd-rootless-setuptool.sh install
     mkdir -p ~/.config/docker/
     json='{
-    "default-address-pools":
+      "bip": "172.30.0.1/16",
+      "default-address-pools":
         [
-        {"base":"10.2.0.0/16","size":24}
+          {"base":"172.31.0.0/16","size":24}
         ]
     }'
     echo "$json" | tee -a ~/.config/docker/daemon.json
