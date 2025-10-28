@@ -1,7 +1,7 @@
 name: myos-sway-main
 description: my personal os sway image
 base-image: ghcr.io/wayblueorg/sway
-image-version: 42
+image-version: 43
 
 modules:
   - from-file: default-files.yml
