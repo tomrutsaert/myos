@@ -5,11 +5,7 @@ image-version: 43
 
 modules:
   - from-file: default-files.yml
-  - type: dnf
-    install:
-      skip-unavailable: true
-      packages:
-          - swappy
+  - from-file: packages-lean.yml
   - from-file: docker.yml
   - from-file: virtualization.yml
   - from-file: tailscale.yml

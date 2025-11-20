@@ -46,7 +46,6 @@ install-flatpaks:
     io.dbeaver.DBeaverCommunity \
     io.podman_desktop.PodmanDesktop \
     it.mijorus.gearlever \
-    org.chromium.Chromium \
     org.gimp.GIMP \
     org.libreoffice.LibreOffice \
     org.telegram.desktop \

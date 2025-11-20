@@ -1,0 +1,12 @@
+modules:
+  - type: dnf
+    repos:
+      cleanup: true
+        - vscodium.repo
+    install:
+      skip-unavailable: true
+      packages:
+        - swappy
+        - codium
+        - chromium
+        - fedora-chromium-config
