@@ -2,8 +2,6 @@ modules:
   - type: dnf
     repos:
       cleanup: true
-      files:
-        - charm.repo
         - vscodium.repo
       copr:
         - atim/starship
@@ -22,15 +20,9 @@ modules:
         - bpftop
         - swappy
         - codium
-        - net-tools
         - lm_sensors
-        - emacs
         - ripgrep
         - fd-find
         - wl-clipboard 
         - clipman
         - corectrl
-    remove:
-      packages:
-        - firefox
-        - firefox-langpacks

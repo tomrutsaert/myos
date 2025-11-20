@@ -5,10 +5,13 @@ image-version: 43
 
 modules:
   - from-file: default-files.yml
-  - from-file: packages.yml
+  - type: dnf
+    install:
+      skip-unavailable: true
+      packages:
+          - swappy
   - from-file: docker.yml
   - from-file: virtualization.yml
-  - from-file: fonts.yml
-  - from-file: just.yml
   - from-file: tailscale.yml
+  - from-file: just.yml
   - type: signing
