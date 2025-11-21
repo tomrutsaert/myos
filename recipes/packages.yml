@@ -2,6 +2,7 @@ modules:
   - type: dnf
     repos:
       cleanup: true
+      files:
         - vscodium.repo
       copr:
         - atim/starship
