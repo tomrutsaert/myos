@@ -88,4 +88,3 @@ if [ -z "$BASHRCSOURCED" ]; then
 
 fi
 # vim:ts=4:sw=4
-eval "$(starship init bash)"

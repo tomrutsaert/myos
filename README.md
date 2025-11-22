@@ -20,7 +20,7 @@ To rebase an existing atomic Fedora installation to the latest build:
 
 - First rebase to the unsigned image, to get the proper signing keys and policies installed:
   ```
-  rpm-ostree rebase ostree-unverified-registry:ghcr.io/tomrutsaert/myos-gnome-main:latest
+  rpm-ostree rebase ostree-unverified-registry:ghcr.io/tomrutsaert/myos-sway-main:latest
   ```
 - Reboot to complete the rebase:
   ```
@@ -28,7 +28,7 @@ To rebase an existing atomic Fedora installation to the latest build:
   ```
 - Then rebase to the signed image, like so:
   ```
-  rpm-ostree rebase ostree-image-signed:docker://ghcr.io/tomrutsaert/myos-gnome-main:latest
+  rpm-ostree rebase ostree-image-signed:docker://ghcr.io/tomrutsaert/myos-sway-main:latest
   ```
 - Reboot again to complete the installation
   ```
@@ -40,10 +40,12 @@ specified in `recipe.yml`, so you won't get accidentally updated to the next maj
 
 ## ISO
 
-If build on Fedora Atomic, you can generate an offline ISO with the instructions
-available [here](https://blue-build.org/learn/universal-blue/#fresh-install-from-an-iso). These ISOs cannot
-unfortunately be distributed on GitHub for free due to large sizes, so for public projects something else has to be used
-for hosting.
+you can also locally build an iso with bluebuild cli, and install this directly
+
+```
+sudo bluebuild generate-iso --iso-name myos-sway-main.iso image ghcr.io/tomrutsaert/myos-sway-main
+```
+more info: https://blue-build.org/how-to/generate-iso/
 
 ## Verification
 
