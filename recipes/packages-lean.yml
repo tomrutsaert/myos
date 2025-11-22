@@ -11,3 +11,11 @@ modules:
         - codium
         - chromium
         - fedora-chromium-config
+        - procps-ng 
+        - curl
+        - file
+        - gcc
+    group-install:
+      with-optional: true
+      packages:
+        - development-tools
