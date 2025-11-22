@@ -5,6 +5,12 @@ add-user-to-groups:
     sudo usermod -a -G libvirt $(whoami)
     sudo usermod -a -G docker $(whoami)
 
+fix-docker:
+    sudo groupadd docker
+    sudo usermod -a -G docker $(whoami)
+    sudo systemctl restart docker.service
+    sudo systemctl restart docker.socket
+
 install-intellij:
     #!/usr/bin/bash
     echo "Get and install latest JetBrains Intellij Ultimate version"

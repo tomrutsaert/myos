@@ -7,7 +7,7 @@ modules:
   - from-file: default-files.yml
   - from-file: packages-lean.yml
   - from-file: docker.yml
-  - from-file: virtualization.yml
+  #- from-file: virtualization.yml
   - from-file: tailscale.yml
   - from-file: just.yml
   - type: signing
