@@ -8,6 +8,7 @@ modules:
       skip-unavailable: true
       packages:
         - swappy
+        - syncthing
         - codium
         - chromium
         - fedora-chromium-config
