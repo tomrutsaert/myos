@@ -31,7 +31,7 @@ jobs:
 
     steps:
       - name: Build Custom Image
-        uses: blue-build/github-action@v1.10.0
+        uses: blue-build/github-action@v1.10.2
         with:
           recipe: ${{ matrix.recipe }}
           cosign_private_key: ${{ secrets.SIGNING_SECRET }}
