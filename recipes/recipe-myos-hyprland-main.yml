@@ -8,6 +8,5 @@ modules:
   - from-file: packages.yml
   - from-file: docker.yml
   - from-file: virtualization.yml
-  - from-file: fonts.yml
   - from-file: just.yml
   - type: signing

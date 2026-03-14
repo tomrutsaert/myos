@@ -4,26 +4,19 @@ modules:
       cleanup: true
       files:
         - vscodium.repo
-      copr:
-        - atim/starship
     install:
       skip-unavailable: true
       packages:
-        - make
-        - stow
-        - gum
-        - starship
-        - hplip
-        - solaar
-        - iotop
-        - powertop
-        - btop
-        - bpftop
         - swappy
+        - syncthing
         - codium
-        - lm_sensors
-        - ripgrep
-        - fd-find
-        - wl-clipboard 
-        - clipman
-        - corectrl
+        - chromium
+        - fedora-chromium-config
+        - procps-ng 
+        - curl
+        - file
+        - gcc
+    group-install:
+      with-optional: true
+      packages:
+        - development-tools

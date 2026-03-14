@@ -5,7 +5,7 @@ image-version: 43
 
 modules:
   - from-file: default-files.yml
-  - from-file: packages-lean.yml
+  - from-file: packages.yml
   - from-file: docker.yml
   - from-file: virtualization.yml
   - from-file: tailscale.yml

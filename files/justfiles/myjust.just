@@ -38,32 +38,3 @@ install-intellij:
     StartupWMClass=jetbrains-idea
     StartupNotify=true
     EOF
-
-install-flatpaks:
-    #!/usr/bin/bash
-    sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-    flatpak install -y flathub \
-    com.discordapp.Discord \
-    com.github.wwmm.easyeffects \
-    com.github.tchx84.Flatseal \
-    com.slack.Slack \
-    com.spotify.Client \
-    de.hohnstaedt.xca \
-    io.dbeaver.DBeaverCommunity \
-    io.podman_desktop.PodmanDesktop \
-    it.mijorus.gearlever \
-    org.gimp.GIMP \
-    org.libreoffice.LibreOffice \
-    org.telegram.desktop \
-    org.videolan.VLC
-
-install-gnome-flatpaks:
-    #!/usr/bin/bash
-    sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-    flatpak install -y flathub \
-    com.mattjakeman.ExtensionManager \
-    io.gitlab.adhami3310.Converter \
-    io.gitlab.liferooter.TextPieces \
-    org.gnome.Loupe \
-    org.gnome.Papers \
-    org.gnome.TextEditor
