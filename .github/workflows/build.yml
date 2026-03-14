@@ -26,6 +26,8 @@ jobs:
           # - recipe-myos-hyprland-nvidia.yml
           - recipe-myos-sway-main.yml
           - recipe-myos-sway-nvidia.yml
+          - recipe-myos-niri-main.yml
+          - recipe-myos-niri-nvidia.yml
           # - recipe-myos-wayfire-main.yml
           # - recipe-myos-wayfire-nvidia.yml
 

@@ -9,6 +9,8 @@ After setup, it is recommended you update this README to describe your custom im
 
 - myos-sway-main
 - myos-sway-nvidia
+- myos-niri-main
+- myos-niri-nvidia
 
 ## Installation
 
