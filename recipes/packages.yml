@@ -10,6 +10,7 @@ modules:
         - swappy
         - syncthing
         - codium
+        - darkman
         - chromium
         - fedora-chromium-config
         - procps-ng 
@@ -20,3 +21,7 @@ modules:
       with-optional: true
       packages:
         - development-tools
+  - type: systemd
+    user:
+      enabled:
+        - darkman.service
