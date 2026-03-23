@@ -13,14 +13,16 @@ modules:
         - darkman
         - chromium
         - fedora-chromium-config
-        - procps-ng 
+        - procps-ng
         - curl
         - file
         - gcc
-    group-install:
-      with-optional: true
-      packages:
-        - development-tools
+        - make
+        - patch
+        - binutils
+        - file
+        - git
+        - which
   - type: systemd
     user:
       enabled:
