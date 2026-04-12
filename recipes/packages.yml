@@ -34,3 +34,4 @@ modules:
     user:
       enabled:
         - darkman.service
+        - syncthing.service
