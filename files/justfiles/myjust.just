@@ -255,19 +255,19 @@ install-intellij:
     mkdir -p $HOME/applications
     tar -xzf ideaIU-*.tar.gz -C $HOME/applications --no-same-owner
     mkdir -p $HOME/.local/share/applications
-    cat << EOF > $HOME/.local/share/applications/jetbrains-idea.desktop
-[Desktop Entry]
-Version=1.0
-Type=Application
-Name=IntelliJ IDEA Ultimate Edition
-Icon=$HOME/applications/idea-IU-${BUILD_VERSION}/bin/idea.svg
-Exec="$HOME/applications/idea-IU-${BUILD_VERSION}/bin/idea" %f
-Comment=Capable and Ergonomic IDE for JVM
-Categories=Development;IDE;
-Terminal=false
-StartupWMClass=jetbrains-idea
-StartupNotify=true
-EOF
+    printf '%s\n' \
+      "[Desktop Entry]" \
+      "Version=1.0" \
+      "Type=Application" \
+      "Name=IntelliJ IDEA Ultimate Edition" \
+      "Icon=$HOME/applications/idea-IU-${BUILD_VERSION}/bin/idea.svg" \
+      "Exec=\"$HOME/applications/idea-IU-${BUILD_VERSION}/bin/idea\" %f" \
+      "Comment=Capable and Ergonomic IDE for JVM" \
+      "Categories=Development;IDE;" \
+      "Terminal=false" \
+      "StartupWMClass=jetbrains-idea" \
+      "StartupNotify=true" \
+      > $HOME/.local/share/applications/jetbrains-idea.desktop
     rm -rf /tmp/idea
 
 install-datagrip:
@@ -292,17 +292,17 @@ install-datagrip:
     mkdir -p $HOME/applications
     tar -xzf datagrip-*.tar.gz -C $HOME/applications --no-same-owner
     mkdir -p $HOME/.local/share/applications
-    cat << EOF > $HOME/.local/share/applications/jetbrains-datagrip.desktop
-[Desktop Entry]
-Version=1.0
-Type=Application
-Name=DataGrip
-Icon=$HOME/applications/DataGrip-${BUILD_VERSION}/bin/datagrip.svg
-Exec="$HOME/applications/DataGrip-${BUILD_VERSION}/bin/datagrip" %f
-Comment=Database IDE by JetBrains
-Categories=Development;IDE;Database;
-Terminal=false
-StartupWMClass=jetbrains-datagrip
-StartupNotify=true
-EOF
+    printf '%s\n' \
+      "[Desktop Entry]" \
+      "Version=1.0" \
+      "Type=Application" \
+      "Name=DataGrip" \
+      "Icon=$HOME/applications/DataGrip-${BUILD_VERSION}/bin/datagrip.svg" \
+      "Exec=\"$HOME/applications/DataGrip-${BUILD_VERSION}/bin/datagrip\" %f" \
+      "Comment=Database IDE by JetBrains" \
+      "Categories=Development;IDE;Database;" \
+      "Terminal=false" \
+      "StartupWMClass=jetbrains-datagrip" \
+      "StartupNotify=true" \
+      > $HOME/.local/share/applications/jetbrains-datagrip.desktop
     rm -rf /tmp/datagrip
