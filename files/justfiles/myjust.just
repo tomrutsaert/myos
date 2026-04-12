@@ -35,6 +35,9 @@ add-user-to-groups:
     sudo usermod -a -G libvirt $(whoami)
     sudo usermod -a -G docker $(whoami)
 
+set-hostname:
+    sudo hostnamectl set-hostname myos
+
 fix-docker:
     sudo groupadd -f docker
     sudo usermod -a -G docker $(whoami)
@@ -295,11 +298,11 @@ install-datagrip:
     rm -rf /tmp/datagrip
     mkdir -p /tmp/datagrip && cd /tmp/datagrip
     curl -sSfL --max-time 30 -o releases.json "https://data.services.jetbrains.com/products/releases?code=DG&latest=true&type=release"
-    BUILD_VERSION=$(jq -r '.DG[0].build' ./releases.json)
+    VERSION=$(jq -r '.DG[0].version' ./releases.json)
     DOWNLOAD_LINK=$(jq -r '.DG[0].downloads.linux.link' ./releases.json)
     CHECKSUM_LINK=$(jq -r '.DG[0].downloads.linux.checksumLink' ./releases.json)
     FILENAME=$(basename "${DOWNLOAD_LINK}")
-    echo "Installing DataGrip ${BUILD_VERSION}"
+    echo "Installing DataGrip ${VERSION}"
     curl -sSfL -o "${FILENAME}" "${DOWNLOAD_LINK}"
     curl -sSfL "${CHECKSUM_LINK}" | sha256sum -c || {
       echo "Checksum verification failed!" >&2
@@ -314,8 +317,8 @@ install-datagrip:
       "Version=1.0" \
       "Type=Application" \
       "Name=DataGrip" \
-      "Icon=$HOME/applications/DataGrip-${BUILD_VERSION}/bin/datagrip.svg" \
-      "Exec=\"$HOME/applications/DataGrip-${BUILD_VERSION}/bin/datagrip\" %f" \
+      "Icon=$HOME/applications/DataGrip-${VERSION}/bin/datagrip.svg" \
+      "Exec=\"$HOME/applications/DataGrip-${VERSION}/bin/datagrip\" %f" \
       "Comment=Database IDE by JetBrains" \
       "Categories=Development;IDE;Database;" \
       "Terminal=false" \

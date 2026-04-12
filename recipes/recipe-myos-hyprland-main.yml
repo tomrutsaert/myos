@@ -9,4 +9,5 @@ modules:
   - from-file: docker.yml
   - from-file: virtualization.yml
   - from-file: just.yml
+  - from-file: os-release.yml
   - type: signing

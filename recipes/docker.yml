@@ -18,3 +18,4 @@ modules:
         - containerd.service
         - docker.service
         - docker.socket
+        - podman.socket

@@ -1,0 +1,11 @@
+modules:
+  - type: os-release
+    properties:
+      NAME: myos
+      PRETTY_NAME: myos (powered by Fedora Atomic)
+      ID: fedora
+      VARIANT_ID: myos
+      DEFAULT_HOSTNAME: myos
+      HOME_URL: https://github.com/tomrutsaert/myos
+      SUPPORT_URL: https://github.com/tomrutsaert/myos/issues
+      BUG_REPORT_URL: https://github.com/tomrutsaert/myos/issues
