@@ -6,10 +6,11 @@
 install-all:
     #!/usr/bin/bash
     set -uo pipefail
+    sudo -v
     failed=()
     for step in set-locale add-user-to-groups fix-docker fix-network-priority \
       install-brew-all install-flatpaks install-sdkman install-nvm \
-      install-intellij install-datagrip; do
+      install-intellij install-datagrip install-claude install-codex; do
       echo "=== Running $step ==="
       just "$step" || failed+=("$step")
     done
@@ -43,10 +44,15 @@ fix-docker:
 fix-network-priority:
     #!/usr/bin/bash
     set -euo pipefail
-    echo "Current connections:"
-    nmcli -t -f NAME,TYPE,DEVICE connection show --active
-    echo ""
-    read -rp "Enter connection name to set lower priority (metric 40): " conn
+    conn=$(nmcli -t -f CONNECTION,TYPE device status \
+      | grep -E '(ethernet|wifi)' \
+      | head -1 \
+      | cut -d: -f1)
+    if [ -z "$conn" ]; then
+      echo "No active ethernet or wifi connection found."
+      exit 1
+    fi
+    echo "Setting route metric 40 on '$conn'..."
     nmcli connection modify "$conn" ipv4.route-metric 40
     nmcli connection up "$conn"
     echo "Route metric for '$conn' set to 40."
@@ -61,7 +67,7 @@ install-brew:
       exit 0
     fi
     echo "Installing Homebrew..."
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
     echo >> "$HOME/.bashrc"
     echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> "$HOME/.bashrc"
     eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
@@ -76,11 +82,13 @@ install-brew-cli-tools:
       awscli \
       bash-completion@2 \
       btop \
+      exiftool \
       fd \
       ffmpeg-full \
       fzf \
       git \
       git-delta \
+      git-lfs \
       imagemagick \
       lazygit \
       libheif \
@@ -98,6 +106,7 @@ install-brew-cli-tools:
       tree-sitter-cli \
       uv \
       yazi \
+      yq \
       zoxide
     # bashrc additions (idempotent)
     grep -q 'starship init bash' "$HOME/.bashrc" || echo 'eval "$(starship init bash)"' >> "$HOME/.bashrc"
@@ -234,6 +243,7 @@ install-nvm:
     [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
     nvm install --latest-npm
     nvm alias default $(node --version) || true
+    npm install -g nx
     echo "NVM installed with Node $(node --version) and npm $(npm --version)."
 
 install-intellij:
@@ -313,3 +323,21 @@ install-datagrip:
       "StartupNotify=true" \
       > $HOME/.local/share/applications/jetbrains-datagrip.desktop
     rm -rf /tmp/datagrip
+
+# --- ai tools ---
+
+install-claude:
+    #!/usr/bin/bash
+    set -euo pipefail
+    echo "Installing Claude Code..."
+    curl -fsSL https://claude.ai/install.sh | bash
+    echo "Claude Code installed."
+
+install-codex:
+    #!/usr/bin/bash
+    set -euo pipefail
+    export NVM_DIR="$HOME/.nvm"
+    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+    echo "Installing Codex CLI..."
+    npm install -g @openai/codex
+    echo "Codex CLI installed: $(codex --version)"
