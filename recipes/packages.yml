@@ -23,7 +23,14 @@ modules:
         - file
         - git
         - which
+        - wl-clipboard
+        - ddcutil
+        - vim
+        - openssh-server
   - type: systemd
+    system:
+      enabled:
+        - sshd.service
     user:
       enabled:
         - darkman.service
