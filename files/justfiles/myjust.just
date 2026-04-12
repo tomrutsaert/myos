@@ -5,25 +5,28 @@
 
 install-all:
     #!/usr/bin/bash
-    set -euo pipefail
-    just set-locale
-    just add-user-to-groups
-    just fix-docker
-    just fix-network-priority
-    just install-brew-all
-    just install-flatpaks
-    just install-sdkman
-    just install-nvm
-    just install-intellij
-    just install-datagrip
-    echo "All installations complete."
+    set -uo pipefail
+    failed=()
+    for step in set-locale add-user-to-groups fix-docker fix-network-priority \
+      install-brew-all install-flatpaks install-sdkman install-nvm \
+      install-intellij install-datagrip; do
+      echo "=== Running $step ==="
+      just "$step" || failed+=("$step")
+    done
+    if [ ${#failed[@]} -eq 0 ]; then
+      echo "All installations complete."
+    else
+      echo "The following steps failed: ${failed[*]}"
+      echo "You can rerun them individually with: just <step>"
+      exit 1
+    fi
 
 # --- system ---
 
 set-locale:
     #!/usr/bin/bash
     set -euo pipefail
-    sudo localectl set-x11-keymap us pc104 '' altgr-intl
+    sudo localectl set-x11-keymap us pc104 '' altgr-intl || true
     echo "Locale set to us/pc104/altgr-intl."
     localectl
 
@@ -206,7 +209,7 @@ install-flatpaks:
 
 install-sdkman:
     #!/usr/bin/bash
-    set -euxo pipefail
+    set -exo pipefail
     if [ -d "$HOME/.sdkman" ]; then
       echo "SDKMAN already installed, updating..."
       source "$HOME/.sdkman/bin/sdkman-init.sh"
@@ -224,7 +227,7 @@ install-sdkman:
 
 install-nvm:
     #!/usr/bin/bash
-    set -euxo pipefail
+    set -exo pipefail
     LATEST=$(curl -sSfL https://api.github.com/repos/nvm-sh/nvm/releases/latest | jq -r '.tag_name')
     curl -o- "https://raw.githubusercontent.com/nvm-sh/nvm/${LATEST}/install.sh" | bash
     export NVM_DIR="$HOME/.nvm"
@@ -240,20 +243,22 @@ install-intellij:
       echo "IntelliJ IDEA is already installed."
       exit 0
     fi
+    rm -rf /tmp/idea
     mkdir -p /tmp/idea && cd /tmp/idea
     curl -sSfL --max-time 30 -o releases.json "https://data.services.jetbrains.com/products/releases?code=IIU&latest=true&type=release"
     BUILD_VERSION=$(jq -r '.IIU[0].build' ./releases.json)
     DOWNLOAD_LINK=$(jq -r '.IIU[0].downloads.linux.link' ./releases.json)
     CHECKSUM_LINK=$(jq -r '.IIU[0].downloads.linux.checksumLink' ./releases.json)
+    FILENAME=$(basename "${DOWNLOAD_LINK}")
     echo "Installing IntelliJ IDEA Ultimate ${BUILD_VERSION}"
-    curl -sSfL -O "${DOWNLOAD_LINK}"
+    curl -sSfL -o "${FILENAME}" "${DOWNLOAD_LINK}"
     curl -sSfL "${CHECKSUM_LINK}" | sha256sum -c || {
       echo "Checksum verification failed!" >&2
-      rm -f ideaIU-*.tar.gz
+      rm -f "${FILENAME}"
       exit 1
     }
     mkdir -p $HOME/applications
-    tar -xzf ideaIU-*.tar.gz -C $HOME/applications --no-same-owner
+    tar -xzf "${FILENAME}" -C $HOME/applications --no-same-owner
     mkdir -p $HOME/.local/share/applications
     printf '%s\n' \
       "[Desktop Entry]" \
@@ -277,20 +282,22 @@ install-datagrip:
       echo "DataGrip is already installed."
       exit 0
     fi
+    rm -rf /tmp/datagrip
     mkdir -p /tmp/datagrip && cd /tmp/datagrip
     curl -sSfL --max-time 30 -o releases.json "https://data.services.jetbrains.com/products/releases?code=DG&latest=true&type=release"
     BUILD_VERSION=$(jq -r '.DG[0].build' ./releases.json)
     DOWNLOAD_LINK=$(jq -r '.DG[0].downloads.linux.link' ./releases.json)
     CHECKSUM_LINK=$(jq -r '.DG[0].downloads.linux.checksumLink' ./releases.json)
+    FILENAME=$(basename "${DOWNLOAD_LINK}")
     echo "Installing DataGrip ${BUILD_VERSION}"
-    curl -sSfL -O "${DOWNLOAD_LINK}"
+    curl -sSfL -o "${FILENAME}" "${DOWNLOAD_LINK}"
     curl -sSfL "${CHECKSUM_LINK}" | sha256sum -c || {
       echo "Checksum verification failed!" >&2
-      rm -f datagrip-*.tar.gz
+      rm -f "${FILENAME}"
       exit 1
     }
     mkdir -p $HOME/applications
-    tar -xzf datagrip-*.tar.gz -C $HOME/applications --no-same-owner
+    tar -xzf "${FILENAME}" -C $HOME/applications --no-same-owner
     mkdir -p $HOME/.local/share/applications
     printf '%s\n' \
       "[Desktop Entry]" \
