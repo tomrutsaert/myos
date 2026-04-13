@@ -11,8 +11,6 @@ modules:
         - syncthing
         - codium
         - darkman
-        - chromium
-        - fedora-chromium-config
         - procps-ng
         - curl
         - file

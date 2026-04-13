@@ -205,6 +205,7 @@ install-flatpaks:
       com.spotify.Client \
       de.hohnstaedt.xca \
       it.mijorus.gearlever \
+      org.chromium.Chromium \
       org.gimp.GIMP \
       org.libreoffice.LibreOffice \
       org.telegram.desktop
