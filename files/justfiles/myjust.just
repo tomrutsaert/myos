@@ -60,6 +60,49 @@ fix-network-priority:
     nmcli connection up "$conn"
     echo "Route metric for '$conn' set to 40."
 
+# --- update ---
+
+# Override ujust update to also update Homebrew
+update:
+    #!/usr/bin/bash
+    set -uo pipefail
+    echo "=== Updating system (rpm-ostree) ==="
+    rpm-ostree update || true
+    echo "=== Updating flatpaks ==="
+    flatpak update -y || true
+    echo "=== Updating distroboxes ==="
+    distrobox upgrade -a || true
+    echo "=== Updating Homebrew ==="
+    if command -v brew &>/dev/null || [ -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
+      eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+      brew update && brew upgrade
+    else
+      echo "Homebrew not installed; skipping."
+    fi
+    echo "=== Updating SDKMAN ==="
+    if [ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]; then
+      source "$HOME/.sdkman/bin/sdkman-init.sh"
+      sdk selfupdate || true
+      sdk upgrade || true
+    else
+      echo "SDKMAN not installed; skipping."
+    fi
+    echo "=== Updating global npm packages ==="
+    export NVM_DIR="$HOME/.nvm"
+    if [ -s "$NVM_DIR/nvm.sh" ]; then
+      . "$NVM_DIR/nvm.sh"
+      npm update -g || true
+    else
+      echo "NVM not installed; skipping."
+    fi
+    echo "=== Updating Claude Code ==="
+    if command -v claude &>/dev/null; then
+      claude update || true
+    else
+      echo "Claude Code not installed; skipping."
+    fi
+    echo "=== Update complete ==="
+
 # --- brew ---
 
 install-brew:
