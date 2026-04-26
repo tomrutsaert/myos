@@ -10,7 +10,7 @@ install-all:
     failed=()
     for step in set-locale add-user-to-groups fix-docker fix-network-priority \
       install-brew-all install-flatpaks install-sdkman install-nvm \
-      install-intellij install-datagrip install-claude install-codex; do
+      install-intellij install-datagrip install-zed install-claude install-codex; do
       echo "=== Running $step ==="
       just "$step" || failed+=("$step")
     done
@@ -370,6 +370,19 @@ install-datagrip:
       "StartupNotify=true" \
       > $HOME/.local/share/applications/jetbrains-datagrip.desktop
     rm -rf /tmp/datagrip
+
+# --- editors ---
+
+install-zed:
+    #!/usr/bin/bash
+    set -euo pipefail
+    if command -v zed &>/dev/null || [ -x "$HOME/.local/bin/zed" ]; then
+      echo "Zed is already installed."
+      exit 0
+    fi
+    echo "Installing Zed..."
+    curl -fsSL https://zed.dev/install.sh | sh
+    echo "Zed installed."
 
 # --- ai tools ---
 
