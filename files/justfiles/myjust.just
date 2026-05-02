@@ -62,8 +62,8 @@ fix-network-priority:
 
 # --- update ---
 
-# Override ujust update to also update Homebrew
-update:
+# Update everything: rpm-ostree, flatpaks, distroboxes, brew, sdkman, npm, claude
+update-all:
     #!/usr/bin/bash
     set -uo pipefail
     echo "=== Updating system (rpm-ostree) ==="
