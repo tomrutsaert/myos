@@ -83,7 +83,13 @@ update-all:
     if [ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]; then
       source "$HOME/.sdkman/bin/sdkman-init.sh"
       sdk selfupdate || true
-      sdk upgrade || true
+      # Refuse SDKMAN's "prescribed defaults" (Temurin) — we keep Corretto.
+      echo n | sdk upgrade || true
+      latest_amzn=$(sdk list java 2>/dev/null | grep -oE '[0-9]+\.[0-9.]+-amzn' | sort -Vu | tail -1)
+      if [ -n "$latest_amzn" ]; then
+        sdk install java "$latest_amzn" < /dev/null || true
+        sdk default java "$latest_amzn" || true
+      fi
     else
       echo "SDKMAN not installed; skipping."
     fi
@@ -278,8 +284,12 @@ install-sdkman:
     sed -i 's/sdkman_auto_env=false/sdkman_auto_env=true/g' $HOME/.sdkman/etc/config
     sdk install maven || true
     sdk install jbang || true
-    sdk install java $(sdk list java | grep -o '25\.[0-9.]*-amzn' | head -1) || true
-    echo "SDKMAN installed with maven, jbang, and Amazon Corretto Java 25."
+    latest_amzn=$(sdk list java | grep -oE '[0-9]+\.[0-9.]+-amzn' | sort -Vu | tail -1)
+    if [ -n "$latest_amzn" ]; then
+      sdk install java "$latest_amzn" < /dev/null || true
+      sdk default java "$latest_amzn" || true
+    fi
+    echo "SDKMAN installed with maven, jbang, and Amazon Corretto Java ${latest_amzn:-(none found)}."
 
 install-nvm:
     #!/usr/bin/bash
