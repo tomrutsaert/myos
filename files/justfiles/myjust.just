@@ -65,7 +65,7 @@ fix-network-priority:
 # Update everything: rpm-ostree, flatpaks, distroboxes, brew, sdkman, npm, claude
 update-all:
     #!/usr/bin/bash
-    set -uo pipefail
+    set -o pipefail
     echo "=== Updating system (rpm-ostree) ==="
     rpm-ostree update || true
     echo "=== Updating flatpaks ==="
