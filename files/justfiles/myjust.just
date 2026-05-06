@@ -159,6 +159,7 @@ install-brew-cli-tools:
       uv \
       yazi \
       yq \
+      zellij \
       zoxide
     # bashrc additions (idempotent)
     grep -q 'starship init bash' "$HOME/.bashrc" || echo 'eval "$(starship init bash)"' >> "$HOME/.bashrc"
