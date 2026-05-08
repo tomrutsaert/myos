@@ -152,6 +152,7 @@ install-brew-cli-tools:
       resvg \
       ripgrep \
       sevenzip \
+      shellcheck \
       starship \
       stow \
       tmux \
