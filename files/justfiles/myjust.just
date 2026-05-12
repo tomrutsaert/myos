@@ -10,7 +10,7 @@ install-all:
     failed=()
     for step in set-locale add-user-to-groups fix-docker fix-network-priority \
       install-brew-all install-flatpaks install-sdkman install-nvm \
-      install-intellij install-datagrip install-zed install-claude install-codex; do
+      install-intellij install-datagrip install-zed install-claude install-codex install-opencode; do
       echo "=== Running $step ==="
       just "$step" || failed+=("$step")
     done
@@ -415,3 +415,19 @@ install-codex:
     echo "Installing Codex CLI..."
     npm install -g @openai/codex
     echo "Codex CLI installed: $(codex --version)"
+
+install-opencode:
+    #!/usr/bin/bash
+    set -euo pipefail
+    OPENCODE_BIN="$HOME/.opencode/bin/opencode"
+    if command -v opencode &>/dev/null; then
+      echo "OpenCode is already installed: $(opencode --version)"
+      exit 0
+    fi
+    if [ -x "$OPENCODE_BIN" ]; then
+      echo "OpenCode is already installed: $($OPENCODE_BIN --version)"
+      exit 0
+    fi
+    echo "Installing OpenCode..."
+    curl -fsSL https://opencode.ai/install | bash
+    echo "OpenCode installed: $($OPENCODE_BIN --version)"
