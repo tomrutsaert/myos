@@ -10,7 +10,7 @@ install-all:
     failed=()
     for step in set-locale add-user-to-groups fix-docker fix-network-priority \
       install-brew-all install-flatpaks install-sdkman install-nvm \
-      install-intellij install-datagrip install-zed install-claude install-codex install-opencode; do
+      install-intellij install-datagrip install-zed install-claude install-codex install-opencode install-pi; do
       echo "=== Running $step ==="
       just "$step" || failed+=("$step")
     done
@@ -431,3 +431,14 @@ install-opencode:
     echo "Installing OpenCode..."
     curl -fsSL https://opencode.ai/install | bash
     echo "OpenCode installed: $($OPENCODE_BIN --version)"
+
+install-pi:
+    #!/usr/bin/bash
+    set -euo pipefail
+    if command -v pi &>/dev/null; then
+      echo "Pi is already installed: $(pi --version 2>/dev/null || echo present)"
+      exit 0
+    fi
+    echo "Installing Pi..."
+    curl -fsSL https://pi.dev/install.sh | sh
+    echo "Pi installed."
