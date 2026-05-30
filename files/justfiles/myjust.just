@@ -62,12 +62,13 @@ fix-network-priority:
 
 # --- update ---
 
-# Update everything: rpm-ostree, flatpaks, distroboxes, brew, sdkman, npm, claude, pi
+# Update everything: bootc, flatpaks, distroboxes, brew, sdkman, npm, claude, pi
 update-all:
     #!/usr/bin/bash
     set -o pipefail
-    echo "=== Updating system (rpm-ostree) ==="
-    rpm-ostree update || true
+    sudo -v
+    echo "=== Updating system (bootc) ==="
+    ujust update || true
     echo "=== Updating flatpaks ==="
     flatpak update -y || true
     echo "=== Updating distroboxes ==="
