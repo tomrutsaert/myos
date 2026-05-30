@@ -1,0 +1,31 @@
+modules:
+  - type: dnf
+    install:
+      packages:
+        - niri
+        - waybar
+        - mako
+        - xdg-desktop-portal-wlr
+        - xdg-desktop-portal-gtk
+        - xdg-desktop-portal-gnome
+        - alacritty
+        - fuzzel
+        - swaylock
+        - swayidle
+        - swaybg
+        - sddm
+        - sddm-themes
+        - xwayland-satellite
+        - brightnessctl
+        - wireplumber
+        - polkit
+        - xfce-polkit
+        - gnome-keyring
+  - type: files
+    files:
+      - source: niri
+        destination: /
+  - type: systemd
+    system:
+      enabled:
+        - sddm.service

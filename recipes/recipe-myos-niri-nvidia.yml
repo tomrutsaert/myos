@@ -1,10 +1,11 @@
 name: myos-niri-nvidia
 description: my personal os niri nvidia image
-base-image: ghcr.io/wayblueorg/niri-nvidia
-image-version: 43
+base-image: ghcr.io/blue-build/base-images/fedora-base-nvidia
+image-version: 44
 
 modules:
   - from-file: default-files.yml
+  - from-file: niri.yml
   - from-file: packages.yml
   - from-file: docker.yml
   - from-file: virtualization.yml
