@@ -12,6 +12,7 @@ modules:
         - codium
         - darkman
         - fprintd-pam
+        - gnome-keyring-pam
         - procps-ng
         - curl
         - file
