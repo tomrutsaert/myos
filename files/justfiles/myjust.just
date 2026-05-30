@@ -62,7 +62,7 @@ fix-network-priority:
 
 # --- update ---
 
-# Update everything: rpm-ostree, flatpaks, distroboxes, brew, sdkman, npm, claude
+# Update everything: rpm-ostree, flatpaks, distroboxes, brew, sdkman, npm, claude, pi
 update-all:
     #!/usr/bin/bash
     set -o pipefail
@@ -108,6 +108,12 @@ update-all:
       claude update || true
     else
       echo "Claude Code not installed; skipping."
+    fi
+    echo "=== Updating Pi ==="
+    if command -v pi &>/dev/null; then
+      pi update || true
+    else
+      echo "Pi not installed; skipping."
     fi
     echo "=== Update complete ==="
 
