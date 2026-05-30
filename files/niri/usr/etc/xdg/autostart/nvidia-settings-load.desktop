@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=NVIDIA X Server Settings
+Comment=Disabled in the Niri image: nvidia-settings --load-config-only exits non-zero under the Wayland/Niri session
+Exec=/usr/bin/nvidia-settings --load-config-only
+Hidden=true
+X-GNOME-Autostart-enabled=false
