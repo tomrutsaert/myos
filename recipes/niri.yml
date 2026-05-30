@@ -5,6 +5,10 @@ modules:
         - niri
         - waybar
         - mako
+        - network-manager-applet
+        - playerctl
+        - grim
+        - slurp
         - xdg-desktop-portal-wlr
         - xdg-desktop-portal-gtk
         - xdg-desktop-portal-gnome
@@ -28,4 +32,5 @@ modules:
   - type: systemd
     system:
       enabled:
+        - sddm-useradd.service
         - sddm.service
