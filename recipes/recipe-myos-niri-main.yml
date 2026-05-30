@@ -12,4 +12,5 @@ modules:
   - from-file: tailscale.yml
   - from-file: just.yml
   - from-file: os-release.yml
+  - type: initramfs
   - type: signing
