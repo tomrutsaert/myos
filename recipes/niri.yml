@@ -1,6 +1,14 @@
 modules:
   - type: dnf
+    remove:
+      auto-remove: false
+      packages:
+        - sddm
+        - sddm-themes
+        - sddm-wayland-generic
+        - sddm-wayland-plasma
     install:
+      allow-erasing: true
       packages:
         - niri
         - waybar
@@ -17,8 +25,8 @@ modules:
         - swaylock
         - swayidle
         - swaybg
-        - sddm
-        - sddm-themes
+        - greetd
+        - tuigreet
         - xwayland-satellite
         - brightnessctl
         - wireplumber
@@ -32,5 +40,4 @@ modules:
   - type: systemd
     system:
       enabled:
-        - sddm-useradd.service
-        - sddm.service
+        - greetd.service

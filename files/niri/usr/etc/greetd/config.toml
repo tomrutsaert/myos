@@ -1,0 +1,9 @@
+[terminal]
+# Keep the greeter on tty1, matching display-manager behavior.
+vt = 1
+
+[default_session]
+# TUI greeter avoids SDDM's Fedora 44 Wayland/Weston invisible cursor issue
+# while still launching the selected Wayland session directly.
+command = "tuigreet --time --remember --remember-session --sessions /usr/share/wayland-sessions --cmd niri-session --power-shutdown 'systemctl poweroff' --power-reboot 'systemctl reboot'"
+user = "greetd"
