@@ -65,31 +65,39 @@ fix-network-priority:
 # Update everything: bootc, flatpaks, distroboxes, brew, sdkman, npm, claude, pi
 update-all:
     #!/usr/bin/bash
-    set -o pipefail
-    sudo -v
-    echo "=== Updating system (bootc) ==="
-    sudo bootc upgrade || true
-    echo "=== Updating flatpaks ==="
-    flatpak update -y || true
-    echo "=== Updating distroboxes ==="
-    distrobox upgrade -a || true
+    set -uo pipefail
+    failed=()
+    run_update() {
+      local name="$1"
+      shift
+      echo "=== Updating ${name} ==="
+      "$@" || failed+=("$name")
+    }
+
+    echo "=== Refreshing sudo credentials ==="
+    sudo -v || failed+=("sudo credentials")
+
+    run_update "system (bootc)" sudo bootc upgrade
+    run_update "flatpaks" flatpak update -y
+    run_update "distroboxes" distrobox upgrade -a
+
     echo "=== Updating Homebrew ==="
     if command -v brew &>/dev/null || [ -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
       eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-      brew update && brew upgrade
+      (brew update && brew upgrade) || failed+=("Homebrew")
     else
       echo "Homebrew not installed; skipping."
     fi
     echo "=== Updating SDKMAN ==="
     if [ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]; then
       source "$HOME/.sdkman/bin/sdkman-init.sh"
-      sdk selfupdate || true
+      sdk selfupdate || failed+=("SDKMAN selfupdate")
       # Refuse SDKMAN's "prescribed defaults" (Temurin) — we keep Corretto.
-      echo n | sdk upgrade || true
+      echo n | sdk upgrade || failed+=("SDKMAN upgrade")
       latest_amzn=$(sdk list java 2>/dev/null | grep -oE '[0-9]+\.[0-9.]+-amzn' | sort -Vu | tail -1)
       if [ -n "$latest_amzn" ]; then
-        sdk install java "$latest_amzn" < /dev/null || true
-        sdk default java "$latest_amzn" || true
+        sdk install java "$latest_amzn" < /dev/null || failed+=("SDKMAN Java install")
+        sdk default java "$latest_amzn" || failed+=("SDKMAN Java default")
       fi
     else
       echo "SDKMAN not installed; skipping."
@@ -98,25 +106,30 @@ update-all:
     export NVM_DIR="$HOME/.nvm"
     if [ -s "$NVM_DIR/nvm.sh" ]; then
       . "$NVM_DIR/nvm.sh"
-      nvm use default
-      export PATH="$NVM_BIN:$PATH"
-      npm update -g || true
+      nvm use default && export PATH="$NVM_BIN:$PATH" && npm update -g || failed+=("global npm packages")
     else
       echo "NVM not installed; skipping."
     fi
     echo "=== Updating Claude Code ==="
     if command -v claude &>/dev/null; then
-      claude update || true
+      claude update || failed+=("Claude Code")
     else
       echo "Claude Code not installed; skipping."
     fi
     echo "=== Updating Pi ==="
     if command -v pi &>/dev/null; then
-      pi update || true
+      pi update || failed+=("Pi")
     else
       echo "Pi not installed; skipping."
     fi
-    echo "=== Update complete ==="
+
+    if [ ${#failed[@]} -eq 0 ]; then
+      echo "=== Update complete ==="
+    else
+      echo "=== Update completed with failures ==="
+      printf 'Failed update step: %s\n' "${failed[@]}"
+      exit 1
+    fi
 
 # --- brew ---
 

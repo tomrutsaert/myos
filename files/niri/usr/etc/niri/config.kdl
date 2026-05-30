@@ -22,18 +22,12 @@ input {
     }
 }
 
-// Match the XWayland server started below.
-environment {
-    DISPLAY ":12"
-}
-
 prefer-no-csd
 screenshot-path "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png"
 
 spawn-at-startup "waybar"
 spawn-at-startup "mako"
 spawn-at-startup "swaybg" "-c" "#1e1e2e"
-spawn-at-startup "xwayland-satellite" ":12"
 spawn-at-startup "/usr/libexec/xfce-polkit"
 spawn-at-startup "gnome-keyring-daemon" "--start" "--components=secrets,ssh"
 spawn-at-startup "swayidle" "-w" "timeout" "600" "swaylock -f -c 1e1e2e" "timeout" "900" "niri msg action power-off-monitors" "before-sleep" "swaylock -f -c 1e1e2e"

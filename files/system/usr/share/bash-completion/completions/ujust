@@ -1,9 +1,12 @@
+# shellcheck shell=bash
 # bash completion for BlueBuild/uBlue just wrapper.
 # Fedora's just package installs completion for `just`, but it does not apply to
 # the `ujust` wrapper because ujust runs the global BlueBuild justfile.
 
 _ujust()
 {
+    # words and cword are populated for bash-completion's _init_completion.
+    # shellcheck disable=SC2034
     local cur words cword
 
     if declare -F _init_completion >/dev/null; then
@@ -16,13 +19,13 @@ _ujust()
     if [[ "${cur}" == -* ]]; then
         local opts
         opts="$(/usr/bin/blujust --help 2>/dev/null | grep -oE '(^|[[:space:]])--[[:alnum:]][[:alnum:]-]*' | tr -d ' ' | sort -u)"
-        COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+        mapfile -t COMPREPLY < <(compgen -W "${opts}" -- "${cur}")
         return
     fi
 
     local recipes
     recipes="$(/usr/bin/blujust --summary 2>/dev/null)"
-    COMPREPLY=( $(compgen -W "${recipes}" -- "${cur}") )
+    mapfile -t COMPREPLY < <(compgen -W "${recipes}" -- "${cur}")
 }
 
 complete -F _ujust ujust blujust
