@@ -12,13 +12,13 @@ install-all:
       install-brew-all install-flatpaks install-sdkman install-nvm \
       install-intellij install-datagrip install-zed install-claude install-codex install-opencode install-pi; do
       echo "=== Running $step ==="
-      just "$step" || failed+=("$step")
+      ujust "$step" || failed+=("$step")
     done
     if [ ${#failed[@]} -eq 0 ]; then
       echo "All installations complete."
     else
       echo "The following steps failed: ${failed[*]}"
-      echo "You can rerun them individually with: just <step>"
+      echo "You can rerun them individually with: ujust <step>"
       exit 1
     fi
 
@@ -245,9 +245,9 @@ install-brew-fonts:
 install-brew-all:
     #!/usr/bin/bash
     set -euo pipefail
-    just install-brew
-    just install-brew-cli-tools
-    just install-brew-fonts
+    ujust install-brew
+    ujust install-brew-cli-tools
+    ujust install-brew-fonts
     echo "All Homebrew components installed."
 
 # --- flatpaks ---
