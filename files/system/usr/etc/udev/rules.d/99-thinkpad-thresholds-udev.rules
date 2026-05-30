@@ -1,0 +1,5 @@
+# Override ublue-os-udev-rules' chmod-based ThinkPad battery threshold rules.
+# On Fedora Atomic/composefs the RUN+=chmod calls are noisy and fail during
+# coldplug. upower's native battery threshold rule keeps charge control usable.
+#
+# Keeping this file with the same basename masks /usr/lib/udev/rules.d/99-thinkpad-thresholds-udev.rules.
