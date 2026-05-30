@@ -90,14 +90,23 @@ update-all:
     fi
     echo "=== Updating SDKMAN ==="
     if [ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]; then
+      # sdkman-init.sh reads optional shell variables such as ZSH_VERSION, so
+      # source it with nounset disabled while keeping nounset for this recipe.
+      set +u
       source "$HOME/.sdkman/bin/sdkman-init.sh"
-      sdk selfupdate || failed+=("SDKMAN selfupdate")
-      # Refuse SDKMAN's "prescribed defaults" (Temurin) — we keep Corretto.
-      echo n | sdk upgrade || failed+=("SDKMAN upgrade")
-      latest_amzn=$(sdk list java 2>/dev/null | grep -oE '[0-9]+\.[0-9.]+-amzn' | sort -Vu | tail -1)
-      if [ -n "$latest_amzn" ]; then
-        sdk install java "$latest_amzn" < /dev/null || failed+=("SDKMAN Java install")
-        sdk default java "$latest_amzn" || failed+=("SDKMAN Java default")
+      sdkman_init_status=$?
+      set -u
+      if [ "$sdkman_init_status" -ne 0 ]; then
+        failed+=("SDKMAN init")
+      else
+        sdk selfupdate || failed+=("SDKMAN selfupdate")
+        # Refuse SDKMAN's "prescribed defaults" (Temurin) — we keep Corretto.
+        echo n | sdk upgrade || failed+=("SDKMAN upgrade")
+        latest_amzn=$(sdk list java 2>/dev/null | grep -oE '[0-9]+\.[0-9.]+-amzn' | sort -Vu | tail -1)
+        if [ -n "$latest_amzn" ]; then
+          sdk install java "$latest_amzn" < /dev/null || failed+=("SDKMAN Java install")
+          sdk default java "$latest_amzn" || failed+=("SDKMAN Java default")
+        fi
       fi
     else
       echo "SDKMAN not installed; skipping."
