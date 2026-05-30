@@ -68,7 +68,7 @@ update-all:
     set -o pipefail
     sudo -v
     echo "=== Updating system (bootc) ==="
-    ujust update || true
+    sudo bootc upgrade || true
     echo "=== Updating flatpaks ==="
     flatpak update -y || true
     echo "=== Updating distroboxes ==="
