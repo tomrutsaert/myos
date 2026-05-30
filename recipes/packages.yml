@@ -11,6 +11,7 @@ modules:
         - syncthing
         - codium
         - darkman
+        - fprintd-pam
         - procps-ng
         - curl
         - file
