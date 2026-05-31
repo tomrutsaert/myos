@@ -1,12 +1,5 @@
 modules:
   - type: dnf
-    remove:
-      auto-remove: false
-      packages:
-        - sddm
-        - sddm-themes
-        - sddm-wayland-generic
-        - sddm-wayland-plasma
     install:
       allow-erasing: true
       packages:
@@ -18,7 +11,6 @@ modules:
         - grim
         - slurp
         - xdg-desktop-portal-wlr
-        - xdg-desktop-portal-gtk
         - xdg-desktop-portal-gnome
         - alacritty
         - kitty
@@ -30,8 +22,6 @@ modules:
         - tuigreet
         - xwayland-satellite
         - brightnessctl
-        - wireplumber
-        - polkit
         - xfce-polkit
         - gnome-keyring
   - type: files

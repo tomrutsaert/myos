@@ -13,20 +13,12 @@ modules:
         - darkman
         - fprintd-pam
         - gnome-keyring-pam
-        - procps-ng
-        - curl
-        - file
         - gcc
         - make
         - patch
         - binutils
-        - file
         - git
-        - which
-        - wl-clipboard
         - ddcutil
-        - vim
-        - openssh-server
   - type: systemd
     system:
       enabled:
