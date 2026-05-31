@@ -57,7 +57,8 @@ layout {
 }
 
 binds {
-    Mod+Return { spawn "alacritty"; }
+    Mod+Return { spawn-sh "cd \"$HOME\" && exec kitty"; }
+    Mod+Shift+Return { spawn-sh "cd \"$HOME\" && exec alacritty"; }
     Mod+D { spawn "fuzzel"; }
     Mod+Escape { spawn "swaylock" "-f" "-c" "1e1e2e"; }
     Mod+Shift+Slash { show-hotkey-overlay; }
