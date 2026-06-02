@@ -90,12 +90,11 @@ update-all:
     fi
     echo "=== Updating SDKMAN ==="
     if [ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]; then
-      # sdkman-init.sh reads optional shell variables such as ZSH_VERSION, so
-      # source it with nounset disabled while keeping nounset for this recipe.
+      # SDKMAN shell code reads optional positional/shell variables, so keep
+      # nounset disabled while sourcing it and while running `sdk` commands.
       set +u
       source "$HOME/.sdkman/bin/sdkman-init.sh"
       sdkman_init_status=$?
-      set -u
       if [ "$sdkman_init_status" -ne 0 ]; then
         failed+=("SDKMAN init")
       else
@@ -108,6 +107,7 @@ update-all:
           sdk default java "$latest_amzn" || failed+=("SDKMAN Java default")
         fi
       fi
+      set -u
     else
       echo "SDKMAN not installed; skipping."
     fi
