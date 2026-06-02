@@ -23,6 +23,9 @@ Layered by `recipes/packages.yml`:
 - `binutils`
 - `git`
 - `ddcutil`
+- `NetworkManager-openvpn`
+- `NetworkManager-openvpn-gnome`
+- `openvpn`
 
 Expected from base image:
 

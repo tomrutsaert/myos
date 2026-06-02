@@ -19,6 +19,9 @@ modules:
         - binutils
         - git
         - ddcutil
+        - NetworkManager-openvpn
+        - NetworkManager-openvpn-gnome
+        - openvpn
   - type: systemd
     system:
       enabled:
