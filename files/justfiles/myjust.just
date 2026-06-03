@@ -65,7 +65,7 @@ fix-network-priority:
 # Update everything: bootc, flatpaks, distroboxes, brew, sdkman, npm, claude, pi
 update-all:
     #!/usr/bin/bash
-    set -uo pipefail
+    set -o pipefail
     failed=()
     run_update() {
       local name="$1"
@@ -98,7 +98,11 @@ update-all:
       if [ "$sdkman_init_status" -ne 0 ]; then
         failed+=("SDKMAN init")
       else
-        sdk selfupdate || failed+=("SDKMAN selfupdate")
+        if [ "${sdkman_selfupdate_feature:-false}" = "true" ]; then
+          sdk selfupdate || failed+=("SDKMAN selfupdate")
+        else
+          echo "SDKMAN selfupdate feature disabled; skipping."
+        fi
         # Refuse SDKMAN's "prescribed defaults" (Temurin) — we keep Corretto.
         echo n | sdk upgrade || failed+=("SDKMAN upgrade")
         latest_amzn=$(sdk list java 2>/dev/null | grep -oE '[0-9]+\.[0-9.]+-amzn' | sort -Vu | tail -1)
