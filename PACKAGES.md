@@ -95,7 +95,6 @@ Layered by `recipes/niri.yml`:
 
 Expected from base image:
 
-- `xdg-desktop-portal-gtk`
 - `wireplumber`
 - `polkit`
 
