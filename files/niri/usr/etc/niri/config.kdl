@@ -56,6 +56,11 @@ layout {
     }
 }
 
+window-rule {
+    match app-id=r#"kitty$"#
+    open-maximized true
+}
+
 binds {
     Mod+Return { spawn-sh "cd \"$HOME\" && exec kitty"; }
     Mod+Shift+Return { spawn-sh "cd \"$HOME\" && exec alacritty"; }
