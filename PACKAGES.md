@@ -80,6 +80,7 @@ Layered by `recipes/niri.yml`:
 - `slurp`
 - `xdg-desktop-portal-wlr`
 - `xdg-desktop-portal-gnome`
+- `xdg-desktop-portal-gtk`
 - `alacritty`
 - `kitty`
 - `fuzzel`
