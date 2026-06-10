@@ -83,6 +83,14 @@ Layered by `recipes/niri.yml`:
 - `xdg-desktop-portal-gtk`
 - `alacritty`
 - `kitty`
+- `Thunar`
+- `gvfs`
+- `gvfs-mtp`
+- `gvfs-smb`
+- `gvfs-afc`
+- `gvfs-gphoto2`
+- `ffmpegthumbnailer`
+- `tumbler`
 - `fuzzel`
 - `swaylock`
 - `swayidle`
