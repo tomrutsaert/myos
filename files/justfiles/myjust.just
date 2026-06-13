@@ -62,7 +62,7 @@ fix-network-priority:
 
 # --- update ---
 
-# Update everything: bootc, flatpaks, distroboxes, brew, sdkman, npm, claude, pi
+# Update everything: bootc, flatpaks, distroboxes, custom scripts, brew, sdkman, npm, claude, pi
 update-all:
     #!/usr/bin/bash
     set -o pipefail
@@ -80,6 +80,28 @@ update-all:
     run_update "system (bootc)" sudo bootc upgrade
     run_update "flatpaks" flatpak update -y
     run_update "distroboxes" distrobox upgrade -a
+
+    echo "=== Running custom update scripts ==="
+    custom_scripts=(
+      "$HOME/scripts/update"
+      "$HOME/scripts/upgrade"
+      "$HOME/scripts/update.sh"
+      "$HOME/scripts/upgrade.sh"
+    )
+    custom_script_found=false
+    for script in "${custom_scripts[@]}"; do
+      if [ -f "$script" ]; then
+        custom_script_found=true
+        if [ -x "$script" ]; then
+          run_update "custom script: ${script}" "$script"
+        else
+          run_update "custom script: ${script}" bash "$script"
+        fi
+      fi
+    done
+    if [ "$custom_script_found" = false ]; then
+      echo "No custom update scripts found; skipping."
+    fi
 
     echo "=== Updating Homebrew ==="
     if command -v brew &>/dev/null || [ -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
