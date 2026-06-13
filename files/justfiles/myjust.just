@@ -62,7 +62,7 @@ fix-network-priority:
 
 # --- update ---
 
-# Update everything: bootc, flatpaks, distroboxes, custom scripts, brew, sdkman, npm, claude, pi
+# Update everything: bootc, flatpaks, distroboxes, custom scripts, brew, sdkman, pi, npm, claude
 update-all:
     #!/usr/bin/bash
     set -o pipefail
@@ -137,6 +137,12 @@ update-all:
     else
       echo "SDKMAN not installed; skipping."
     fi
+    echo "=== Updating Pi ==="
+    if command -v pi &>/dev/null; then
+      pi update || failed+=("Pi")
+    else
+      echo "Pi not installed; skipping."
+    fi
     echo "=== Updating global npm packages ==="
     export NVM_DIR="$HOME/.nvm"
     if [ -s "$NVM_DIR/nvm.sh" ]; then
@@ -150,12 +156,6 @@ update-all:
       claude update || failed+=("Claude Code")
     else
       echo "Claude Code not installed; skipping."
-    fi
-    echo "=== Updating Pi ==="
-    if command -v pi &>/dev/null; then
-      pi update || failed+=("Pi")
-    else
-      echo "Pi not installed; skipping."
     fi
 
     if [ ${#failed[@]} -eq 0 ]; then
