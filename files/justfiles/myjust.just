@@ -176,10 +176,12 @@ install-brew-cli-tools:
       git \
       git-delta \
       git-lfs \
+      herdr \
       imagemagick \
       lazygit \
       libheif \
       make \
+      media-info \
       net-tools \
       neovim \
       nvtop \
