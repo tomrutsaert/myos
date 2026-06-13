@@ -84,7 +84,7 @@ update-all:
     echo "=== Updating Homebrew ==="
     if command -v brew &>/dev/null || [ -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
       eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-      (brew update && brew upgrade) || failed+=("Homebrew")
+      (brew update && brew upgrade --yes) || failed+=("Homebrew")
     else
       echo "Homebrew not installed; skipping."
     fi
@@ -165,7 +165,7 @@ install-brew-cli-tools:
     set -euo pipefail
     eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
     echo "Installing CLI tools via Homebrew..."
-    brew install \
+    brew install --yes \
       awscli \
       bash-completion@2 \
       btop \
@@ -215,7 +215,7 @@ install-brew-fonts:
     set -euo pipefail
     eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
     echo "Installing Nerd Fonts via Homebrew..."
-    brew install --cask \
+    brew install --cask --yes \
       font-3270-nerd-font \
       font-fira-mono-nerd-font \
       font-inconsolata-go-nerd-font \
