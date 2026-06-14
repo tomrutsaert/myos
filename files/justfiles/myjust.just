@@ -126,10 +126,20 @@ update-all:
           echo "SDKMAN selfupdate feature disabled; skipping."
         fi
         # Refuse SDKMAN's "prescribed defaults" (Temurin) — we keep Corretto.
-        echo n | sdk upgrade || failed+=("SDKMAN upgrade")
+        # The public `sdk` wrapper re-sources ~/.sdkman/etc/config on every call,
+        # resetting sdkman_auto_answer=false, so use SDKMAN's loaded helpers here
+        # to keep this update path truly non-interactive.
+        (
+          sdkman_auto_answer=true
+          UPGRADE_ALL=n
+          __sdk_upgrade
+        ) || failed+=("SDKMAN upgrade")
         latest_amzn=$(sdk list java 2>/dev/null | grep -oE '[0-9]+\.[0-9.]+-amzn' | sort -Vu | tail -1)
         if [ -n "$latest_amzn" ]; then
-          sdk install java "$latest_amzn" < /dev/null || failed+=("SDKMAN Java install")
+          (
+            sdkman_auto_answer=true
+            __sdk_install java "$latest_amzn"
+          ) || failed+=("SDKMAN Java install")
           sdk default java "$latest_amzn" || failed+=("SDKMAN Java default")
         fi
       fi
