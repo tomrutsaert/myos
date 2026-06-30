@@ -1,0 +1,22 @@
+modules:
+  - type: dnf
+    install:
+      packages:
+        - https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-44.noarch.rpm
+        - https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-44.noarch.rpm
+  - type: dnf
+    install:
+      allow-erasing: true
+      packages:
+        - ffmpeg
+        - gstreamer1-plugins-bad-freeworld
+        - gstreamer1-plugins-ugly
+        - gstreamer1-plugin-libav
+        - pipewire-libs-extra
+        - libheif-freeworld
+        - heif-pixbuf-loader
+        - libheif-tools
+        # Fedora 44/RPM Fusion currently provides Mesa restricted-codec support here.
+        - mesa-va-drivers-freeworld
+        - libva-utils
+        - unrar

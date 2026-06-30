@@ -1,0 +1,14 @@
+# shellcheck shell=bash
+# NVIDIA-specific Sway/wlroots compatibility for the MyOS Sway NVIDIA image.
+# Driver and akmod packages come from ghcr.io/blue-build/base-images/fedora-base-nvidia.
+
+export LIBVA_DRIVER_NAME=nvidia
+export GBM_BACKEND=nvidia-drm
+export __GLX_VENDOR_LIBRARY_NAME=nvidia
+
+# Conservative wlroots compatibility: keep until target NVIDIA hardware proves
+# hardware cursors work reliably with the selected driver stack.
+export WLR_NO_HARDWARE_CURSORS=1
+
+# The common wrapper translates this into `sway --unsupported-gpu`.
+export MYOS_SWAY_UNSUPPORTED_GPU=1

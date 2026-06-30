@@ -1,0 +1,10 @@
+modules:
+  - type: dnf
+    install:
+      allow-erasing: true
+      packages:
+        - libva-nvidia-driver
+  - type: files
+    files:
+      - source: sway-nvidia
+        destination: /

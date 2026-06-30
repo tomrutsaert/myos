@@ -1,0 +1,66 @@
+{
+    "layer": "top",
+    "position": "top",
+    "height": 30,
+    "spacing": 8,
+
+    "modules-left": [
+        "sway/workspaces"
+    ],
+    "modules-center": [
+        "sway/window"
+    ],
+    "modules-right": [
+        "tray",
+        "network",
+        "wireplumber",
+        "battery",
+        "clock"
+    ],
+
+    "sway/workspaces": {
+        "format": "{icon}",
+        "format-icons": {
+            "focused": "●",
+            "default": "○"
+        }
+    },
+
+    "sway/window": {
+        "format": "{}",
+        "max-length": 80
+    },
+
+    "tray": {
+        "spacing": 8
+    },
+
+    "network": {
+        "format-wifi": "󰖩 {essid}",
+        "format-ethernet": "󰈀 {ipaddr}/{cidr}",
+        "format-disconnected": "󰖪 disconnected",
+        "tooltip-format": "{ifname} via {gwaddr}"
+    },
+
+    "wireplumber": {
+        "format": " {volume}%",
+        "format-muted": "󰝟 muted",
+        "on-click": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
+    },
+
+    "battery": {
+        "states": {
+            "warning": 30,
+            "critical": 15
+        },
+        "format": "{icon} {capacity}%",
+        "format-charging": "󰂄 {capacity}%",
+        "format-plugged": "󰚥 {capacity}%",
+        "format-icons": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"]
+    },
+
+    "clock": {
+        "format": "{:%a %Y-%m-%d %H:%M}",
+        "tooltip-format": "<tt><small>{calendar}</small></tt>"
+    }
+}

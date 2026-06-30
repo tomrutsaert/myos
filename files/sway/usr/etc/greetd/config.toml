@@ -1,0 +1,9 @@
+[terminal]
+# Keep the greeter on tty1, matching display-manager behavior.
+vt = 1
+
+[default_session]
+# TUI greeter avoids pulling in a graphical display manager while still
+# launching the selected Wayland session directly through the MyOS Sway wrapper.
+command = "tuigreet --time --remember --remember-session --sessions /usr/share/wayland-sessions --cmd /usr/bin/myos-sway-session --power-shutdown 'systemctl poweroff' --power-reboot 'systemctl reboot'"
+user = "greetd"

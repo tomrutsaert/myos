@@ -1,0 +1,24 @@
+#!/usr/bin/bash
+# Stable MyOS Sway entry point for greetd and wayland-session launchers.
+# NVIDIA-specific compatibility is added by an optional overlay file so the
+# common Sway image stays generic.
+
+set -euo pipefail
+
+nvidia_env=/usr/libexec/myos-sway-nvidia-env
+sway_args=()
+
+if [[ -r "${nvidia_env}" ]]; then
+    # shellcheck source=/dev/null
+    source "${nvidia_env}"
+fi
+
+export XDG_CURRENT_DESKTOP="${XDG_CURRENT_DESKTOP:-sway}"
+export XDG_SESSION_DESKTOP="${XDG_SESSION_DESKTOP:-sway}"
+export DESKTOP_SESSION="${DESKTOP_SESSION:-sway}"
+
+if [[ "${MYOS_SWAY_UNSUPPORTED_GPU:-}" == "1" ]]; then
+    sway_args+=(--unsupported-gpu)
+fi
+
+exec sway "${sway_args[@]}" "$@"

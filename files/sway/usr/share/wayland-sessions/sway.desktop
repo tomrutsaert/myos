@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=Sway
+Comment=MyOS Sway session
+Exec=/usr/bin/myos-sway-session
+Type=Application
+DesktopNames=sway

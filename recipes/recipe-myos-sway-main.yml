@@ -1,14 +1,17 @@
 name: myos-sway-main
 description: my personal os sway image
-base-image: ghcr.io/wayblueorg/sway
-image-version: 43
+base-image: ghcr.io/blue-build/base-images/fedora-base
+image-version: 44
 
 modules:
   - from-file: default-files.yml
+  - from-file: sway.yml
+  - from-file: multimedia.yml
   - from-file: packages.yml
   - from-file: docker.yml
   - from-file: virtualization.yml
   - from-file: tailscale.yml
   - from-file: just.yml
   - from-file: os-release.yml
+  - type: initramfs
   - type: signing

@@ -1,14 +1,18 @@
 name: myos-sway-nvidia
 description: my personal os sway nvidia image
-base-image: ghcr.io/wayblueorg/sway-nvidia
-image-version: 43
+base-image: ghcr.io/blue-build/base-images/fedora-base-nvidia
+image-version: 44
 
 modules:
   - from-file: default-files.yml
+  - from-file: sway.yml
+  - from-file: sway-nvidia.yml
+  - from-file: multimedia.yml
   - from-file: packages.yml
   - from-file: docker.yml
   - from-file: virtualization.yml
   - from-file: tailscale.yml
   - from-file: just.yml
   - from-file: os-release.yml
+  - type: initramfs
   - type: signing
