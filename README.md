@@ -14,31 +14,25 @@ After setup, it is recommended you update this README to describe your custom im
 
 ## Installation
 
-> **Warning**
-> [This is an experimental feature](https://www.fedoraproject.org/wiki/Changes/OstreeNativeContainerStable), try at your
-> own discretion.
+To switch an existing Fedora Atomic/bootc installation to MyOS, choose one of the images above.
 
-To rebase an existing atomic Fedora installation to the latest build:
+When switching from official Fedora for the first time, the MyOS signing policy is not installed yet, so do the initial switch without enforcing the policy:
 
-- First rebase to the unsigned image, to get the proper signing keys and policies installed:
-  ```
-  rpm-ostree rebase ostree-unverified-registry:ghcr.io/tomrutsaert/myos-sway-main:latest
-  ```
-- Reboot to complete the rebase:
-  ```
-  systemctl reboot
-  ```
-- Then rebase to the signed image, like so:
-  ```
-  rpm-ostree rebase ostree-image-signed:docker://ghcr.io/tomrutsaert/myos-sway-main:latest
-  ```
-- Reboot again to complete the installation
-  ```
-  systemctl reboot
-  ```
+```bash
+sudo bootc switch ghcr.io/tomrutsaert/myos-sway-main:latest
+sudo systemctl reboot
+```
+
+After booting into MyOS, normal updates and later image switches should enforce the installed signing policy:
+
+```bash
+sudo bootc upgrade
+sudo bootc switch --enforce-container-sigpolicy ghcr.io/tomrutsaert/myos-sway-nvidia:latest
+sudo systemctl reboot
+```
 
 The `latest` tag will automatically point to the latest build. That build will still always use the Fedora version
-specified in `recipe.yml`, so you won't get accidentally updated to the next major version.
+specified in the recipe, so you won't get accidentally updated to the next major version.
 
 ## ISO
 
@@ -55,5 +49,5 @@ These images are signed with [Sigstore](https://www.sigstore.dev/)'s [cosign](ht
 can verify the signature by downloading the `cosign.pub` file from this repo and running the following command:
 
 ```bash
-cosign verify --key cosign.pub ghcr.io/tomrutsaert/myos
+cosign verify --key cosign.pub ghcr.io/tomrutsaert/myos-sway-main:latest
 ```
