@@ -7,6 +7,7 @@ set -euo pipefail
 
 nvidia_env=/usr/libexec/myos-sway-nvidia-env
 sway_args=()
+graphical_session_unit="myos-sway-graphical-session"
 
 if [[ -r "${nvidia_env}" ]]; then
     # shellcheck source=/dev/null
@@ -16,9 +17,57 @@ fi
 export XDG_CURRENT_DESKTOP="${XDG_CURRENT_DESKTOP:-sway}"
 export XDG_SESSION_DESKTOP="${XDG_SESSION_DESKTOP:-sway}"
 export DESKTOP_SESSION="${DESKTOP_SESSION:-sway}"
+export XDG_SESSION_TYPE="${XDG_SESSION_TYPE:-wayland}"
+
+if command -v systemctl >/dev/null 2>&1; then
+    systemctl --user reset-failed || true
+    systemctl --user stop "${graphical_session_unit}.service" >/dev/null 2>&1 || true
+    systemctl --user import-environment \
+        XDG_CURRENT_DESKTOP \
+        XDG_SESSION_DESKTOP \
+        DESKTOP_SESSION \
+        XDG_SESSION_TYPE || true
+
+    # graphical-session.target refuses manual starts. Keep it active by
+    # pulling it in through a tiny transient unit, matching what compositor
+    # session units such as niri.service provide for portal activation.
+    if command -v systemd-run >/dev/null 2>&1; then
+        systemd-run --user \
+            --unit="${graphical_session_unit}" \
+            --description="Keep graphical-session.target active for MyOS Sway" \
+            --property=Wants=graphical-session.target \
+            --property=After=graphical-session.target \
+            sleep infinity >/dev/null || true
+    fi
+fi
+
+if command -v dbus-update-activation-environment >/dev/null 2>&1; then
+    dbus-update-activation-environment --systemd \
+        XDG_CURRENT_DESKTOP \
+        XDG_SESSION_DESKTOP \
+        DESKTOP_SESSION \
+        XDG_SESSION_TYPE || true
+fi
 
 if [[ "${MYOS_SWAY_UNSUPPORTED_GPU:-}" == "1" ]]; then
     sway_args+=(--unsupported-gpu)
 fi
 
-exec sway "${sway_args[@]}" "$@"
+set +e
+sway "${sway_args[@]}" "$@"
+sway_status=$?
+set -e
+
+if command -v systemctl >/dev/null 2>&1; then
+    systemctl --user stop "${graphical_session_unit}.service" >/dev/null 2>&1 || true
+    systemctl --user unset-environment \
+        WAYLAND_DISPLAY \
+        DISPLAY \
+        XDG_SESSION_TYPE \
+        XDG_CURRENT_DESKTOP \
+        XDG_SESSION_DESKTOP \
+        DESKTOP_SESSION \
+        SWAYSOCK || true
+fi
+
+exit "$sway_status"
