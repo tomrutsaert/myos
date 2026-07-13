@@ -122,6 +122,7 @@ Layered by `recipes/sway.yml`:
 - `tuigreet`
 - `xfce-polkit`
 - `gnome-keyring`
+- `dbus-tools`
 - `xdg-desktop-portal-wlr`
 - `xdg-desktop-portal-gtk`
 - `xorg-x11-server-Xwayland`

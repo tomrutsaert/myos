@@ -19,8 +19,9 @@ input "type:touchpad" {
 
 output * bg #1e1e2e solid_color
 
-# Session services and desktop integration.
-exec_always dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP SWAYSOCK
+# Session services and desktop integration. Sway creates the runtime display
+# and socket variables before deferred exec commands run.
+exec_always dbus-update-activation-environment --systemd WAYLAND_DISPLAY DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP=sway XDG_SESSION_DESKTOP=sway DESKTOP_SESSION=sway XDG_SESSION_TYPE=wayland
 exec mako
 exec /usr/libexec/xfce-polkit
 exec gnome-keyring-daemon --start --components=secrets

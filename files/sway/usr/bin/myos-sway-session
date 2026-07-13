@@ -17,7 +17,7 @@ fi
 export XDG_CURRENT_DESKTOP="${XDG_CURRENT_DESKTOP:-sway}"
 export XDG_SESSION_DESKTOP="${XDG_SESSION_DESKTOP:-sway}"
 export DESKTOP_SESSION="${DESKTOP_SESSION:-sway}"
-export XDG_SESSION_TYPE="${XDG_SESSION_TYPE:-wayland}"
+export XDG_SESSION_TYPE=wayland
 
 if command -v systemctl >/dev/null 2>&1; then
     systemctl --user reset-failed || true
