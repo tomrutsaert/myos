@@ -29,6 +29,7 @@ modules:
         - swaybg
         - greetd
         - tuigreet
+        - dbus-tools
         - xwayland-satellite
         - brightnessctl
         - xfce-polkit

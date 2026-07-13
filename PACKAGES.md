@@ -96,6 +96,7 @@ Layered by `recipes/niri.yml`:
 - `swaybg`
 - `greetd`
 - `tuigreet`
+- `dbus-tools`
 - `xwayland-satellite`
 - `brightnessctl`
 - `xfce-polkit`
