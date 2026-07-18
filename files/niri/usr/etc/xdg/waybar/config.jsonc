@@ -45,7 +45,8 @@
     "wireplumber": {
         "format": " {volume}%",
         "format-muted": "󰝟 muted",
-        "on-click": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
+        "on-click": "pavucontrol",
+        "on-click-right": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
     },
 
     "battery": {

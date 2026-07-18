@@ -8,6 +8,8 @@ modules:
         - mako
         - network-manager-applet
         - playerctl
+        - pavucontrol
+        - blueman
         - grim
         - slurp
         - xdg-desktop-portal-wlr

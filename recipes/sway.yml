@@ -9,6 +9,8 @@ modules:
         - mako
         - network-manager-applet
         - playerctl
+        - pavucontrol
+        - blueman
         - kitty
         - fuzzel
         - greetd

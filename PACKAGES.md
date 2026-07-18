@@ -75,6 +75,8 @@ Layered by `recipes/niri.yml`:
 - `mako`
 - `network-manager-applet`
 - `playerctl`
+- `pavucontrol`
+- `blueman`
 - `grim`
 - `slurp`
 - `xdg-desktop-portal-wlr`
@@ -117,6 +119,8 @@ Layered by `recipes/sway.yml`:
 - `mako`
 - `network-manager-applet`
 - `playerctl`
+- `pavucontrol`
+- `blueman`
 - `kitty`
 - `fuzzel`
 - `greetd`
