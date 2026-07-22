@@ -208,7 +208,9 @@ install-brew-cli-tools:
       git \
       git-delta \
       git-lfs \
+      glab \
       herdr \
+      hunk \
       imagemagick \
       lazygit \
       libheif \
@@ -224,6 +226,7 @@ install-brew-cli-tools:
       shellcheck \
       starship \
       stow \
+      superfile \
       tmux \
       tree-sitter-cli \
       uv \
