@@ -1,0 +1,6 @@
+modules:
+  - type: dnf
+    install:
+      packages:
+        - https://github.com/peteonrails/voxtype/releases/download/v0.7.5/voxtype-0.7.5-1.x86_64.rpm
+        - wtype

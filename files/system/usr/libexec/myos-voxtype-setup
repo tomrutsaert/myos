@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+config_home="${XDG_CONFIG_HOME:-$HOME/.config}"
+config_dir="$config_home/voxtype"
+config_file="$config_dir/config.toml"
+
+refuse_symlinked_config_path() {
+    local path
+    for path in "$config_home" "$config_dir" "$config_file"; do
+        if [[ -L "$path" ]]; then
+            printf 'Refusing symlinked Voxtype config path: %s\n' "$path" >&2
+            exit 1
+        fi
+    done
+}
+
+refuse_symlinked_config_path
+if [[ ! -e "$config_file" ]]; then
+    mkdir -p -- "$config_dir"
+    refuse_symlinked_config_path
+    (
+        set -o noclobber
+        cat > "$config_file" <<'EOF'
+[hotkey]
+enabled = false
+EOF
+    )
+fi
+
+voxtype setup --download
+
+service_status=0
+if systemctl --user list-unit-files voxtype.service --no-legend 2>/dev/null \
+    | grep -q '^voxtype\.service[[:space:]]'; then
+    systemctl --user enable --now voxtype.service || service_status=$?
+fi
+
+cat <<'EOF'
+bindsym --no-repeat $mod+v exec voxtype record start
+bindsym --release $mod+v exec voxtype record stop
+EOF
+
+exit "$service_status"

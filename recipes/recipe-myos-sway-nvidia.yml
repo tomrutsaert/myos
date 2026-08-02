@@ -9,6 +9,7 @@ modules:
   - from-file: sway-nvidia.yml
   - from-file: multimedia.yml
   - from-file: packages.yml
+  - from-file: voxtype.yml
   - from-file: docker.yml
   - from-file: virtualization.yml
   - from-file: tailscale.yml

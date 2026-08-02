@@ -36,6 +36,15 @@ Expected from base image:
 - `vim`
 - `openssh-server`
 
+### Voice input
+
+Layered by `recipes/voxtype.yml` for all images:
+
+- `voxtype` v0.7.5, installed from the pinned upstream RPM
+- `wtype`
+
+Per-user model download and configuration are available through the installed global recipe: `ujust voxtype-setup` (equivalently, `blujust voxtype-setup`).
+
 ### Docker
 
 Layered by `recipes/docker.yml`:
@@ -199,6 +208,7 @@ Package groups expected in final image:
 
 - Niri desktop
 - Workstation tools
+- Voice input
 - Docker
 - Virtualization
 - Tailscale
@@ -211,6 +221,7 @@ Package groups expected in final image:
 
 - Niri desktop
 - Workstation tools
+- Voice input
 - Docker
 - Virtualization
 - Tailscale
@@ -224,6 +235,7 @@ Package groups expected in final image:
 - Sway desktop
 - Multimedia codecs
 - Workstation tools
+- Voice input
 - Docker
 - Virtualization
 - Tailscale
@@ -238,6 +250,7 @@ Package groups expected in final image:
 - Sway NVIDIA overlay
 - Multimedia codecs
 - Workstation tools
+- Voice input
 - Docker
 - Virtualization
 - Tailscale
@@ -251,6 +264,7 @@ Base image: `ghcr.io/wayblueorg/hyprland:42`
 Package groups expected in final image:
 
 - Workstation tools
+- Voice input
 - Docker
 - Virtualization
 
@@ -263,6 +277,7 @@ Base image: `ghcr.io/wayblueorg/hyprland-nvidia:42`
 Package groups expected in final image:
 
 - Workstation tools
+- Voice input
 - Docker
 - Virtualization
 

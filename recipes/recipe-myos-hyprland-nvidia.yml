@@ -6,6 +6,7 @@ image-version: 42
 modules:
   - from-file: default-files.yml
   - from-file: packages.yml
+  - from-file: voxtype.yml
   - from-file: docker.yml
   - from-file: virtualization.yml
   - from-file: just.yml

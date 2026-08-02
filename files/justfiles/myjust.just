@@ -24,6 +24,10 @@ install-all:
 
 # --- system ---
 
+# Download Voxtype's default Whisper model and configure compositor integration.
+voxtype-setup:
+    /usr/libexec/myos-voxtype-setup
+
 set-locale:
     #!/usr/bin/bash
     set -euo pipefail
