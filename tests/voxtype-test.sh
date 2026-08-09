@@ -71,6 +71,9 @@ mkdir -p "$tmp_dir/bin"
 cat > "$tmp_dir/bin/voxtype" <<'MOCK'
 #!/usr/bin/env bash
 set -euo pipefail
+if [[ -n "${VOXTYPE_TEST_EXPECTED_CONFIG:-}" ]]; then
+    cmp -s "$VOXTYPE_TEST_EXPECTED_CONFIG" "$XDG_CONFIG_HOME/voxtype/config.toml"
+fi
 printf 'voxtype %s\n' "$*" >> "$VOXTYPE_TEST_LOG"
 MOCK
 cat > "$tmp_dir/bin/systemctl" <<'MOCK'
@@ -87,21 +90,36 @@ chmod +x "$tmp_dir/bin/voxtype" "$tmp_dir/bin/systemctl"
 
 run_setup() {
     local home=$1 config_home=$2 has_service=$3 output=$4 log=$5 enable_status=${6:-0}
+    local expected_config=${7:-}
     env -i HOME="$home" XDG_CONFIG_HOME="$config_home" PATH="$tmp_dir/bin:/usr/bin:/bin" \
         VOXTYPE_TEST_HAS_SERVICE="$has_service" VOXTYPE_TEST_ENABLE_STATUS="$enable_status" \
-        VOXTYPE_TEST_LOG="$log" "$setup_script" > "$output" 2>&1
+        VOXTYPE_TEST_EXPECTED_CONFIG="$expected_config" VOXTYPE_TEST_LOG="$log" \
+        "$setup_script" > "$output" 2>&1
 }
 
+legacy_config="$tmp_dir/legacy-config"
+printf '[hotkey]\nenabled = false\n' > "$legacy_config"
 expected_config="$tmp_dir/expected-config"
-printf '[hotkey]\nenabled = false\n' > "$expected_config"
+cat > "$expected_config" <<'EOF'
+[hotkey]
+enabled = false
+
+[audio]
+device = "default"
+sample_rate = 16000
+max_duration_secs = 60
+
+[output]
+mode = "type"
+EOF
 
 home_new="$tmp_dir/home-new"
 mkdir -p "$home_new/.config/sway"
 printf 'user sway config\n' > "$home_new/.config/sway/config"
 log_new="$tmp_dir/new.log"
-run_setup "$home_new" "$home_new/.config" 1 "$tmp_dir/new.out" "$log_new"
+run_setup "$home_new" "$home_new/.config" 1 "$tmp_dir/new.out" "$log_new" 0 "$expected_config"
 cmp -s "$expected_config" "$home_new/.config/voxtype/config.toml" \
-    || fail "new config does not disable the built-in hotkey"
+    || fail "new config is not a complete v0.7.5-valid minimal config"
 grep -Fqx 'voxtype setup --download' "$log_new" || fail "setup does not download the default Whisper model"
 grep -Fqx 'systemctl --user enable --now voxtype.service' "$log_new" \
     || fail "setup does not enable the present user service"
@@ -114,6 +132,41 @@ cmp -s "$tmp_dir/first-run-config" "$home_new/.config/voxtype/config.toml" \
     || fail "rerunning setup changed its generated config"
 grep -Fqx 'user sway config' "$home_new/.config/sway/config" || fail "rerunning setup modified Sway config"
 assert_exact_bindings "$tmp_dir/rerun.out"
+
+home_legacy="$tmp_dir/home-legacy"
+legacy_config_dir="$home_legacy/.config/voxtype"
+legacy_config_file="$legacy_config_dir/config.toml"
+mkdir -p "$legacy_config_dir"
+cp "$legacy_config" "$legacy_config_file"
+chmod 0640 "$legacy_config_file"
+run_setup "$home_legacy" "$home_legacy/.config" 0 \
+    "$tmp_dir/legacy.out" "$tmp_dir/legacy.log" 0 "$expected_config"
+cmp -s "$expected_config" "$legacy_config_file" \
+    || fail "setup did not migrate the exact legacy MyOS config"
+[[ $(stat -c '%a' "$legacy_config_file") == 640 ]] \
+    || fail "legacy config migration did not preserve its file mode"
+[[ -z $(find "$legacy_config_dir" -maxdepth 1 -name '.config.toml.*' -print -quit) ]] \
+    || fail "legacy config migration left a temporary file"
+grep -Fqx 'voxtype setup --download' "$tmp_dir/legacy.log" \
+    || fail "model setup did not proceed after legacy config migration"
+assert_exact_bindings "$tmp_dir/legacy.out"
+
+cp "$legacy_config_file" "$tmp_dir/migrated-config"
+run_setup "$home_legacy" "$home_legacy/.config" 0 \
+    "$tmp_dir/legacy-rerun.out" "$tmp_dir/legacy-rerun.log" 0 "$expected_config"
+cmp -s "$tmp_dir/migrated-config" "$legacy_config_file" \
+    || fail "rerunning setup changed the migrated config"
+assert_exact_bindings "$tmp_dir/legacy-rerun.out"
+
+home_near_match="$tmp_dir/home-near-match"
+mkdir -p "$home_near_match/.config/voxtype"
+printf '[hotkey]\nenabled = false\n# custom\n' > "$home_near_match/.config/voxtype/config.toml"
+cp "$home_near_match/.config/voxtype/config.toml" "$tmp_dir/near-match-config"
+run_setup "$home_near_match" "$home_near_match/.config" 0 \
+    "$tmp_dir/near-match.out" "$tmp_dir/near-match.log"
+cmp -s "$tmp_dir/near-match-config" "$home_near_match/.config/voxtype/config.toml" \
+    || fail "setup changed a near-match custom config"
+assert_exact_bindings "$tmp_dir/near-match.out"
 
 home_existing="$tmp_dir/home-existing"
 mkdir -p "$home_existing/.config/voxtype"

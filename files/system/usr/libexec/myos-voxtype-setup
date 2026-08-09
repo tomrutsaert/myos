@@ -15,17 +15,39 @@ refuse_symlinked_config_path() {
     done
 }
 
+write_minimal_config() {
+    cat <<'EOF'
+[hotkey]
+enabled = false
+
+[audio]
+device = "default"
+sample_rate = 16000
+max_duration_secs = 60
+
+[output]
+mode = "type"
+EOF
+}
+
 refuse_symlinked_config_path
 if [[ ! -e "$config_file" ]]; then
     mkdir -p -- "$config_dir"
     refuse_symlinked_config_path
     (
         set -o noclobber
-        cat > "$config_file" <<'EOF'
-[hotkey]
-enabled = false
-EOF
+        write_minimal_config > "$config_file"
     )
+elif cmp -s -- "$config_file" <(printf '[hotkey]\nenabled = false\n'); then
+    migration_file=$(mktemp -- "$config_dir/.config.toml.XXXXXX")
+    trap 'rm -f -- "${migration_file:-}"' EXIT
+    write_minimal_config > "$migration_file"
+    chmod --reference="$config_file" -- "$migration_file"
+    refuse_symlinked_config_path
+    if cmp -s -- "$config_file" <(printf '[hotkey]\nenabled = false\n'); then
+        mv -T -- "$migration_file" "$config_file"
+        migration_file=
+    fi
 fi
 
 voxtype setup --download
