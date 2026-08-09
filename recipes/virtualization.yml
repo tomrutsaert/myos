@@ -1,13 +1,15 @@
 modules:
   - type: dnf
     install:
-      skip-unavailable: true
       packages:
         - virt-install
         - libvirt-daemon-config-network
         - libvirt-daemon-kvm
         - libvirt-daemon-driver-qemu
         - qemu-kvm
+        - qemu-img
+        - virtiofsd
+        - edk2-ovmf
         - virt-manager
         - virt-viewer
         - guestfs-tools

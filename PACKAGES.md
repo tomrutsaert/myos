@@ -36,6 +36,20 @@ Expected from base image:
 - `vim`
 - `openssh-server`
 
+### Per-user Homebrew CLI tools
+
+Homebrew CLI tools are managed by the global `ujust install-brew-cli-tools` recipe, not layered or baked into the immutable image. Lima is installed per-user through Homebrew by this ujust recipe.
+
+Selected host-development formulae:
+
+- `difftastic`
+- `lima`
+- `mise`
+- `mkcert`
+- `mosh`
+- `ttyd`
+- `ydiff`
+
 ### Voice input
 
 Layered by `recipes/voxtype.yml` for all images:
@@ -54,6 +68,7 @@ Layered by `recipes/docker.yml`:
 - `containerd.io`
 - `docker-buildx-plugin`
 - `docker-compose-plugin`
+- `podman`
 
 ### Virtualization
 
@@ -64,6 +79,9 @@ Layered by `recipes/virtualization.yml`:
 - `libvirt-daemon-kvm`
 - `libvirt-daemon-driver-qemu`
 - `qemu-kvm`
+- `qemu-img`
+- `virtiofsd`
+- `edk2-ovmf`
 - `virt-manager`
 - `virt-viewer`
 - `guestfs-tools`

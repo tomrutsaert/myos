@@ -205,6 +205,7 @@ install-brew-cli-tools:
       awscli \
       bash-completion@2 \
       btop \
+      difftastic \
       exiftool \
       fd \
       ffmpeg-full \
@@ -218,8 +219,12 @@ install-brew-cli-tools:
       imagemagick \
       lazygit \
       libheif \
+      lima \
       make \
       media-info \
+      mise \
+      mkcert \
+      mosh \
       net-tools \
       neovim \
       nvtop \
@@ -233,8 +238,10 @@ install-brew-cli-tools:
       superfile \
       tmux \
       tree-sitter-cli \
+      ttyd \
       uv \
       yazi \
+      ydiff \
       yq \
       zellij \
       zoxide

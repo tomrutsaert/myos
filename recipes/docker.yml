@@ -5,13 +5,13 @@ modules:
       files:
         - https://download.docker.com/linux/fedora/docker-ce.repo
     install:
-      skip-unavailable: true
       packages:
         - docker-ce
         - docker-ce-cli
         - containerd.io
         - docker-buildx-plugin
         - docker-compose-plugin
+        - podman
   - type: systemd
     system:
       enabled:
