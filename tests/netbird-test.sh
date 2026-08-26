@@ -5,7 +5,8 @@ repo_root=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
 netbird_recipe="$repo_root/recipes/netbird.yml"
 install_script="$repo_root/files/scripts/netbird-install.sh"
 repo_file="$repo_root/files/dnf/netbird.repo"
-service_dropin="$repo_root/files/systemd/netbird.service.d/log-directory.conf"
+tmpfiles_config="$repo_root/files/tmpfiles.d/myos-netbird.conf"
+obsolete_service_dropin="$repo_root/files/systemd/netbird.service.d/log-directory.conf"
 packages_doc="$repo_root/PACKAGES.md"
 
 fail() {
@@ -28,7 +29,9 @@ packages=(netbird netbird-ui gtk4 webkitgtk6.0 xdg-utils)
 [[ -f "$netbird_recipe" ]] || fail "missing dedicated NetBird recipe"
 [[ -x "$install_script" ]] || fail "missing executable NetBird install script"
 [[ -f "$repo_file" ]] || fail "missing checked-in NetBird repository file"
-[[ -f "$service_dropin" ]] || fail "missing NetBird log-directory drop-in"
+[[ -f "$tmpfiles_config" ]] || fail "missing NetBird tmpfiles configuration"
+[[ ! -e "$obsolete_service_dropin" ]] \
+    || fail "NetBird must not rely on LogsDirectory to create its stdout parent"
 
 for recipe in "${active_recipes[@]}"; do
     count=$(grep -Fxc '  - from-file: netbird.yml' "$repo_root/recipes/$recipe" || true)
@@ -53,20 +56,16 @@ grep -Fq 'SYSTEMD_OFFLINE=1 dnf' "$install_script" \
     || fail "NetBird install does not suppress postinstall service startup during image build"
 grep -Fq '/run/systemd/system' "$install_script" \
     || fail "NetBird install does not force the postinstall script to choose systemd"
-grep -Fq 'dropin_source=/tmp/files/systemd/netbird.service.d/log-directory.conf' "$install_script" \
-    || fail "NetBird installer does not reference the service drop-in"
-grep -Fq 'dropin_destination=/etc/systemd/system/netbird.service.d/log-directory.conf' "$install_script" \
-    || fail "NetBird installer does not target the service drop-in directory"
-grep -Fq "install -Dm0644 -- \"\$dropin_source\" \"\$dropin_destination\"" "$install_script" \
-    || fail "NetBird installer does not install the service drop-in"
+grep -Fq 'tmpfiles_source=/tmp/files/tmpfiles.d/myos-netbird.conf' "$install_script" \
+    || fail "NetBird installer does not reference the tmpfiles configuration"
+grep -Fq 'tmpfiles_destination=/usr/lib/tmpfiles.d/myos-netbird.conf' "$install_script" \
+    || fail "NetBird installer does not target the vendor tmpfiles directory"
+grep -Fq "install -Dm0644 -- \"\$tmpfiles_source\" \"\$tmpfiles_destination\"" "$install_script" \
+    || fail "NetBird installer does not install the tmpfiles configuration"
 
-expected_dropin=$(cat <<'EOF'
-[Service]
-LogsDirectory=netbird
-EOF
-)
-[[ $(cat "$service_dropin") == "$expected_dropin" ]] \
-    || fail "NetBird service drop-in does not provision its log directory"
+expected_tmpfiles='d /var/log/netbird 0755 root root -'
+[[ $(cat "$tmpfiles_config") == "$expected_tmpfiles" ]] \
+    || fail "NetBird tmpfiles configuration does not provision its log directory"
 
 expected_repo=$(cat <<'EOF'
 [NetBird]

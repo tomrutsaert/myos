@@ -3,8 +3,8 @@ set -euo pipefail
 
 repo_source=/tmp/files/dnf/netbird.repo
 repo_destination=/etc/yum.repos.d/netbird.repo
-dropin_source=/tmp/files/systemd/netbird.service.d/log-directory.conf
-dropin_destination=/etc/systemd/system/netbird.service.d/log-directory.conf
+tmpfiles_source=/tmp/files/tmpfiles.d/myos-netbird.conf
+tmpfiles_destination=/usr/lib/tmpfiles.d/myos-netbird.conf
 systemd_parent=/run/systemd
 systemd_runtime=/run/systemd/system
 created_systemd_parent=false
@@ -45,6 +45,6 @@ SYSTEMD_OFFLINE=1 dnf -y install \
     webkitgtk6.0 \
     xdg-utils
 
-# The generated unit writes stdout, stderr, and client logs below this path.
-# Have systemd create it on every boot before setting up the service streams.
-install -Dm0644 -- "$dropin_source" "$dropin_destination"
+# systemd opens the unit's file-backed output before processing LogsDirectory,
+# so provision the parent during early boot instead.
+install -Dm0644 -- "$tmpfiles_source" "$tmpfiles_destination"
