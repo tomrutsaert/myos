@@ -1,29 +1,22 @@
-# myos &nbsp; [![bluebuild build badge](https://github.com/tomrutsaert/myos/actions/workflows/build.yml/badge.svg)](https://github.com/tomrutsaert/myos/actions/workflows/build.yml)
+# MyOS [![Build status](https://github.com/tomrutsaert/myos/actions/workflows/build.yml/badge.svg)](https://github.com/tomrutsaert/myos/actions/workflows/build.yml)
 
-See the [BlueBuild docs](https://blue-build.org/how-to/setup/) for quick setup instructions for setting up your own
-repository based on this template.
-
-After setup, it is recommended you update this README to describe your custom image.
-
-## Available Images
+MyOS is a pair of Fedora 44 bootc images with a shared Sway desktop and development tools:
 
 - myos-sway-main
 - myos-sway-nvidia
-- myos-niri-main
-- myos-niri-nvidia
+
+Use `myos-sway-main` on the AMD system. The laptop uses `myos-sway-nvidia`, which adds the NVIDIA base image and Sway compatibility overlay.
 
 ## Installation
 
-To switch an existing Fedora Atomic/bootc installation to MyOS, choose one of the images above.
-
-When switching from official Fedora for the first time, the MyOS signing policy is not installed yet, so do the initial switch without enforcing the policy:
+Switch an existing Fedora Atomic or bootc system to the image appropriate for its hardware. The MyOS signing policy is not present during the first switch from stock Fedora, so do not enforce it on that initial switch:
 
 ```bash
 sudo bootc switch ghcr.io/tomrutsaert/myos-sway-main:latest
 sudo systemctl reboot
 ```
 
-After booting into MyOS, normal updates and later image switches should enforce the installed signing policy:
+After booting MyOS, upgrades and image switches can enforce the installed signing policy:
 
 ```bash
 sudo bootc upgrade
@@ -31,22 +24,21 @@ sudo bootc switch --enforce-container-sigpolicy ghcr.io/tomrutsaert/myos-sway-nv
 sudo systemctl reboot
 ```
 
-The `latest` tag will automatically point to the latest build. That build will still always use the Fedora version
-specified in the recipe, so you won't get accidentally updated to the next major version.
+The `latest` tag tracks the newest build of the Fedora version pinned in each recipe; it does not automatically move to a new Fedora major version.
 
-## ISO
+## Building an ISO
 
-you can also locally build an iso with bluebuild cli, and install this directly
+Build an installer ISO locally with the [BlueBuild CLI](https://blue-build.org/how-to/generate-iso/):
 
-```
+```bash
 sudo bluebuild generate-iso --iso-name myos-sway-main.iso image ghcr.io/tomrutsaert/myos-sway-main
 ```
-more info: https://blue-build.org/how-to/generate-iso/
 
-## Verification
+Replace the image name when building the NVIDIA variant.
 
-These images are signed with [Sigstore](https://www.sigstore.dev/)'s [cosign](https://github.com/sigstore/cosign). You
-can verify the signature by downloading the `cosign.pub` file from this repo and running the following command:
+## Verifying signatures
+
+Images are signed with [Sigstore cosign](https://docs.sigstore.dev/cosign/). Verify an image with the public key in this repository:
 
 ```bash
 cosign verify --key cosign.pub ghcr.io/tomrutsaert/myos-sway-main:latest

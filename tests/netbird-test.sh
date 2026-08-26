@@ -17,12 +17,6 @@ fail() {
 active_recipes=(
     recipe-myos-sway-main.yml
     recipe-myos-sway-nvidia.yml
-    recipe-myos-niri-main.yml
-    recipe-myos-niri-nvidia.yml
-)
-inactive_recipes=(
-    recipe-myos-hyprland-main.yml
-    recipe-myos-hyprland-nvidia.yml
 )
 packages=(netbird netbird-ui gtk4 webkitgtk6.0 xdg-utils)
 
@@ -33,14 +27,13 @@ packages=(netbird netbird-ui gtk4 webkitgtk6.0 xdg-utils)
 [[ ! -e "$obsolete_service_dropin" ]] \
     || fail "NetBird must not rely on LogsDirectory to create its stdout parent"
 
+mapfile -t image_recipes < <(find "$repo_root/recipes" -maxdepth 1 -type f -name 'recipe-*.yml' -printf '%f\n' | sort)
+[[ "${image_recipes[*]}" == "${active_recipes[*]}" ]] \
+    || fail "image recipe inventory must contain only: ${active_recipes[*]}"
+
 for recipe in "${active_recipes[@]}"; do
     count=$(grep -Fxc '  - from-file: netbird.yml' "$repo_root/recipes/$recipe" || true)
     [[ "$count" -eq 1 ]] || fail "$recipe must include netbird.yml exactly once"
-done
-for recipe in "${inactive_recipes[@]}"; do
-    if grep -Fq 'from-file: netbird.yml' "$repo_root/recipes/$recipe"; then
-        fail "$recipe must not include netbird.yml"
-    fi
 done
 
 for package in "${packages[@]}"; do
@@ -80,15 +73,9 @@ EOF
 [[ $(cat "$repo_file") == "$expected_repo" ]] || fail "NetBird repository config differs from upstream"
 
 grep -Fqx '### NetBird' "$packages_doc" || fail "PACKAGES.md lacks the NetBird package group"
-for image in myos-sway-main myos-sway-nvidia myos-niri-main myos-niri-nvidia; do
+for image in myos-sway-main myos-sway-nvidia; do
     section=$(sed -n "/^### \`$image\`$/,/^### /p" "$packages_doc")
     grep -Fqx -- '- NetBird' <<< "$section" || fail "$image membership does not include NetBird"
-done
-for image in myos-hyprland-main myos-hyprland-nvidia; do
-    section=$(sed -n "/^### \`$image\`$/,/^### /p" "$packages_doc")
-    if grep -Fqx -- '- NetBird' <<< "$section"; then
-        fail "$image membership must not include NetBird"
-    fi
 done
 
 echo "PASS: NetBird package, repository, service, and image membership configuration"

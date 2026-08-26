@@ -29,8 +29,7 @@ if command -v systemctl >/dev/null 2>&1; then
         XDG_SESSION_TYPE || true
 
     # graphical-session.target refuses manual starts. Keep it active by
-    # pulling it in through a tiny transient unit, matching what compositor
-    # session units such as niri.service provide for portal activation.
+    # pulling it in through a tiny transient unit so portals can activate.
     if command -v systemd-run >/dev/null 2>&1; then
         systemd-run --user \
             --unit="${graphical_session_unit}" \

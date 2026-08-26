@@ -20,12 +20,8 @@ jobs:
       fail-fast: false
       matrix:
         recipe:
-          # - recipe-myos-hyprland-main.yml
-          # - recipe-myos-hyprland-nvidia.yml
           - recipe-myos-sway-main.yml
           - recipe-myos-sway-nvidia.yml
-          - recipe-myos-niri-main.yml
-          - recipe-myos-niri-nvidia.yml
 
     steps:
       - name: Build Custom Image

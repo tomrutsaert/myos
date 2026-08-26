@@ -29,10 +29,6 @@ EOF
 recipes=(
     recipe-myos-sway-main.yml
     recipe-myos-sway-nvidia.yml
-    recipe-myos-niri-main.yml
-    recipe-myos-niri-nvidia.yml
-    recipe-myos-hyprland-main.yml
-    recipe-myos-hyprland-nvidia.yml
 )
 
 [[ -f "$voxtype_recipe" ]] || fail "missing dedicated voxtype recipe"
@@ -44,22 +40,16 @@ for recipe in "${recipes[@]}"; do
     [[ "$count" -eq 1 ]] || fail "$recipe must include voxtype.yml exactly once"
 done
 
-active_recipes=(
-    recipe-myos-sway-main.yml
-    recipe-myos-sway-nvidia.yml
-    recipe-myos-niri-main.yml
-    recipe-myos-niri-nvidia.yml
-)
-for recipe in "${active_recipes[@]}"; do
-    grep -Fqx "          - $recipe" "$repo_root/.github/workflows/build.yml" \
-        || fail "$recipe is not active in the CI build matrix"
+mapfile -t matrix_recipes < <(sed -n '/^[[:space:]]*recipe:$/,/^[[:space:]]*steps:$/p' \
+    "$repo_root/.github/workflows/build.yml" \
+    | sed -n 's/^[[:space:]]*- \(recipe-[^[:space:]]*\.yml\)$/\1/p')
+[[ "${matrix_recipes[*]}" == "${recipes[*]}" ]] \
+    || fail "CI build matrix must contain only: ${recipes[*]}"
+
+for recipe in "${recipes[@]}"; do
     image=${recipe#recipe-}
     image=${image%.yml}
     grep -Fqx -- "- $image" "$readme" || fail "README does not list $image"
-done
-for recipe in recipe-myos-hyprland-main.yml recipe-myos-hyprland-nvidia.yml; do
-    grep -Fqx "          # - $recipe" "$repo_root/.github/workflows/build.yml" \
-        || fail "$recipe must remain disabled in the CI build matrix"
 done
 
 grep -Eq '^voxtype-setup:' "$justfile" || fail "installed global justfile lacks voxtype-setup"

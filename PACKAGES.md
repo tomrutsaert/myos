@@ -1,9 +1,6 @@
 # Intended image packages
 
-This file documents the package set we expect to be present in the final images.
-
-Packages under **Layered by recipes** are installed explicitly by BlueBuild recipe modules.
-Packages under **Expected from base image** are intentionally not layered because recent builds showed them already present in the base image; keep them here so they are not forgotten if a base image changes.
+This file documents packages explicitly layered by the MyOS recipes and important packages expected from the base images. Both retained images use Fedora 44 and the same shared Sway layers; the NVIDIA image adds its hardware-specific overlay.
 
 ## Shared package groups
 
@@ -27,7 +24,7 @@ Layered by `recipes/packages.yml`:
 - `NetworkManager-openvpn-gnome`
 - `openvpn`
 
-Expected from base image:
+Expected from the base images:
 
 - `procps-ng`
 - `curl`
@@ -38,7 +35,7 @@ Expected from base image:
 
 ### Per-user Homebrew CLI tools
 
-Homebrew CLI tools are managed by the global `ujust install-brew-cli-tools` recipe, not layered or baked into the immutable image. Lima is installed per-user through Homebrew by this ujust recipe.
+Homebrew CLI tools are managed by the global `ujust install-brew-cli-tools` recipe rather than layered or baked into the immutable image. Lima is installed per-user through Homebrew by this ujust recipe.
 
 Selected host-development formulae:
 
@@ -52,12 +49,12 @@ Selected host-development formulae:
 
 ### Voice input
 
-Layered by `recipes/voxtype.yml` for all images:
+Layered by `recipes/voxtype.yml`:
 
-- `voxtype` v0.7.5, installed from the pinned upstream RPM
+- `voxtype` v0.7.5 from the pinned upstream RPM
 - `wtype`
 
-Per-user model download and configuration are available through the installed global recipe: `ujust voxtype-setup` (equivalently, `blujust voxtype-setup`).
+Download and configure the per-user model with `ujust voxtype-setup` (or the equivalent `blujust voxtype-setup`).
 
 ### Docker
 
@@ -95,7 +92,7 @@ Layered by `recipes/tailscale.yml`:
 
 ### NetBird
 
-Layered by `recipes/netbird.yml` for the active Fedora 44 Sway and Niri images from NetBird's official RPM repository:
+Layered by `recipes/netbird.yml` from NetBird's official RPM repository:
 
 - `netbird`
 - `netbird-ui`
@@ -103,51 +100,7 @@ Layered by `recipes/netbird.yml` for the active Fedora 44 Sway and Niri images f
 - `webkitgtk6.0`
 - `xdg-utils`
 
-The Fedora 42 Hyprland recipes do not include this group because the current NetBird GUI baseline is Fedora 43 or newer.
-
-### Niri desktop
-
-Layered by `recipes/niri.yml`:
-
-- `niri`
-- `waybar`
-- `mako`
-- `network-manager-applet`
-- `playerctl`
-- `pavucontrol`
-- `blueman`
-- `grim`
-- `slurp`
-- `xdg-desktop-portal-wlr`
-- `xdg-desktop-portal-gnome`
-- `xdg-desktop-portal-gtk`
-- `alacritty`
-- `kitty`
-- `Thunar`
-- `gvfs`
-- `gvfs-mtp`
-- `gvfs-smb`
-- `gvfs-afc`
-- `gvfs-gphoto2`
-- `ffmpegthumbnailer`
-- `tumbler`
-- `fuzzel`
-- `swaylock`
-- `swayidle`
-- `swaybg`
-- `greetd`
-- `tuigreet`
-- `dbus-tools`
-- `xwayland-satellite`
-- `brightnessctl`
-- `xfce-polkit`
-- `gnome-keyring`
-
-Expected from base image:
-
-- `wireplumber`
-- `polkit`
-- `wl-clipboard`
+## Sway package groups
 
 ### Sway desktop
 
@@ -194,14 +147,14 @@ Layered by `recipes/sway.yml`:
 - `pamixer`
 - `android-tools`
 
-Expected from base image:
+Expected from the base images:
 
 - `wireplumber`
 - `polkit`
 
 ### Multimedia codecs
 
-Layered by `recipes/multimedia.yml` for Sway images:
+Layered by `recipes/multimedia.yml`:
 
 - RPM Fusion free release RPM for Fedora 44
 - RPM Fusion nonfree release RPM for Fedora 44
@@ -217,7 +170,7 @@ Layered by `recipes/multimedia.yml` for Sway images:
 - `libva-utils`
 - `unrar`
 
-Current Fedora 44/RPM Fusion Mesa restricted-codec support is provided by `mesa-va-drivers-freeworld`; `mesa-vdpau-drivers-freeworld` is not available as a separate package.
+Fedora 44 uses `mesa-va-drivers-freeworld` for the current RPM Fusion Mesa restricted-codec support.
 
 ### Sway NVIDIA overlay
 
@@ -226,43 +179,15 @@ Layered by `recipes/sway-nvidia.yml` for `myos-sway-nvidia` only:
 - `libva-nvidia-driver`
 - `/usr/libexec/myos-sway-nvidia-env` with wlroots/NVIDIA session compatibility settings
 
-NVIDIA driver and akmod packages are expected from `ghcr.io/blue-build/base-images/fedora-base-nvidia:44`, not layered by MyOS. Secure Boot deployments may still require key/MOK enrollment for NVIDIA kernel modules.
+NVIDIA driver and akmod packages come from `ghcr.io/blue-build/base-images/fedora-base-nvidia:44`. Secure Boot deployments may require key or MOK enrollment for NVIDIA kernel modules.
 
 ## Final images
-
-### `myos-niri-main`
-
-Base image: `ghcr.io/blue-build/base-images/fedora-base:44`
-
-Package groups expected in final image:
-
-- Niri desktop
-- Workstation tools
-- Voice input
-- Docker
-- Virtualization
-- Tailscale
-- NetBird
-
-### `myos-niri-nvidia`
-
-Base image: `ghcr.io/blue-build/base-images/fedora-base-nvidia:44`
-
-Package groups expected in final image:
-
-- Niri desktop
-- Workstation tools
-- Voice input
-- Docker
-- Virtualization
-- Tailscale
-- NetBird
 
 ### `myos-sway-main`
 
 Base image: `ghcr.io/blue-build/base-images/fedora-base:44`
 
-Package groups expected in final image:
+Included groups:
 
 - Sway desktop
 - Multimedia codecs
@@ -277,7 +202,7 @@ Package groups expected in final image:
 
 Base image: `ghcr.io/blue-build/base-images/fedora-base-nvidia:44`
 
-Package groups expected in final image:
+Included groups:
 
 - Sway desktop
 - Sway NVIDIA overlay
@@ -290,29 +215,3 @@ Package groups expected in final image:
 - NetBird
 
 NVIDIA driver support is inherited from the BlueBuild NVIDIA base image. MyOS layers only Sway-specific NVIDIA compatibility and VA-API support.
-
-### `myos-hyprland-main`
-
-Base image: `ghcr.io/wayblueorg/hyprland:42`
-
-Package groups expected in final image:
-
-- Workstation tools
-- Voice input
-- Docker
-- Virtualization
-
-Hyprland itself and its desktop dependencies are inherited from the base image.
-
-### `myos-hyprland-nvidia`
-
-Base image: `ghcr.io/wayblueorg/hyprland-nvidia:42`
-
-Package groups expected in final image:
-
-- Workstation tools
-- Voice input
-- Docker
-- Virtualization
-
-Hyprland, NVIDIA support, and their desktop dependencies are inherited from the base image.
