@@ -93,6 +93,18 @@ Layered by `recipes/tailscale.yml`:
 
 - `tailscale`
 
+### NetBird
+
+Layered by `recipes/netbird.yml` for the active Fedora 44 Sway and Niri images from NetBird's official RPM repository:
+
+- `netbird`
+- `netbird-ui`
+- `gtk4`
+- `webkitgtk6.0`
+- `xdg-utils`
+
+The Fedora 42 Hyprland recipes do not include this group because the current NetBird GUI baseline is Fedora 43 or newer.
+
 ### Niri desktop
 
 Layered by `recipes/niri.yml`:
@@ -230,6 +242,7 @@ Package groups expected in final image:
 - Docker
 - Virtualization
 - Tailscale
+- NetBird
 
 ### `myos-niri-nvidia`
 
@@ -243,6 +256,7 @@ Package groups expected in final image:
 - Docker
 - Virtualization
 - Tailscale
+- NetBird
 
 ### `myos-sway-main`
 
@@ -257,6 +271,7 @@ Package groups expected in final image:
 - Docker
 - Virtualization
 - Tailscale
+- NetBird
 
 ### `myos-sway-nvidia`
 
@@ -272,6 +287,7 @@ Package groups expected in final image:
 - Docker
 - Virtualization
 - Tailscale
+- NetBird
 
 NVIDIA driver support is inherited from the BlueBuild NVIDIA base image. MyOS layers only Sway-specific NVIDIA compatibility and VA-API support.
 

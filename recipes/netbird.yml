@@ -1,0 +1,10 @@
+modules:
+  # NetBird's RPM starts its service in %post, so install it offline through the
+  # small wrapper instead of allowing the daemon to start during the image build.
+  - type: script
+    scripts:
+      - netbird-install.sh
+  - type: systemd
+    system:
+      enabled:
+        - netbird.service
