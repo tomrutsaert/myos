@@ -5,6 +5,7 @@ repo_root=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
 netbird_recipe="$repo_root/recipes/netbird.yml"
 install_script="$repo_root/files/scripts/netbird-install.sh"
 repo_file="$repo_root/files/dnf/netbird.repo"
+service_dropin="$repo_root/files/systemd/netbird.service.d/log-directory.conf"
 packages_doc="$repo_root/PACKAGES.md"
 
 fail() {
@@ -27,6 +28,7 @@ packages=(netbird netbird-ui gtk4 webkitgtk6.0 xdg-utils)
 [[ -f "$netbird_recipe" ]] || fail "missing dedicated NetBird recipe"
 [[ -x "$install_script" ]] || fail "missing executable NetBird install script"
 [[ -f "$repo_file" ]] || fail "missing checked-in NetBird repository file"
+[[ -f "$service_dropin" ]] || fail "missing NetBird log-directory drop-in"
 
 for recipe in "${active_recipes[@]}"; do
     count=$(grep -Fxc '  - from-file: netbird.yml' "$repo_root/recipes/$recipe" || true)
@@ -51,6 +53,20 @@ grep -Fq 'SYSTEMD_OFFLINE=1 dnf' "$install_script" \
     || fail "NetBird install does not suppress postinstall service startup during image build"
 grep -Fq '/run/systemd/system' "$install_script" \
     || fail "NetBird install does not force the postinstall script to choose systemd"
+grep -Fq 'dropin_source=/tmp/files/systemd/netbird.service.d/log-directory.conf' "$install_script" \
+    || fail "NetBird installer does not reference the service drop-in"
+grep -Fq 'dropin_destination=/etc/systemd/system/netbird.service.d/log-directory.conf' "$install_script" \
+    || fail "NetBird installer does not target the service drop-in directory"
+grep -Fq "install -Dm0644 -- \"\$dropin_source\" \"\$dropin_destination\"" "$install_script" \
+    || fail "NetBird installer does not install the service drop-in"
+
+expected_dropin=$(cat <<'EOF'
+[Service]
+LogsDirectory=netbird
+EOF
+)
+[[ $(cat "$service_dropin") == "$expected_dropin" ]] \
+    || fail "NetBird service drop-in does not provision its log directory"
 
 expected_repo=$(cat <<'EOF'
 [NetBird]
