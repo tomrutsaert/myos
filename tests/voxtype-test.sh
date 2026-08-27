@@ -26,27 +26,36 @@ EOF
         || fail "output does not contain exactly the two recommended bindings: $output"
 }
 
-recipes=(
+sway_recipes=(
     recipe-myos-sway-main.yml
     recipe-myos-sway-nvidia.yml
+)
+all_recipes=(
+    "${sway_recipes[@]}"
+    recipe-myos-server-main.yml
+    recipe-myos-server-nvidia.yml
 )
 
 [[ -f "$voxtype_recipe" ]] || fail "missing dedicated voxtype recipe"
 grep -Fqx '        - https://github.com/peteonrails/voxtype/releases/download/v0.7.5/voxtype-0.7.5-1.x86_64.rpm' "$voxtype_recipe" \
     || fail "voxtype recipe does not pin the v0.7.5 RPM URL"
 grep -Fqx '        - wtype' "$voxtype_recipe" || fail "voxtype recipe does not install wtype"
-for recipe in "${recipes[@]}"; do
+for recipe in "${sway_recipes[@]}"; do
     count=$(grep -Fxc '  - from-file: voxtype.yml' "$repo_root/recipes/$recipe" || true)
     [[ "$count" -eq 1 ]] || fail "$recipe must include voxtype.yml exactly once"
+done
+for recipe in recipe-myos-server-main.yml recipe-myos-server-nvidia.yml; do
+    ! grep -Fq 'from-file: voxtype.yml' "$repo_root/recipes/$recipe" \
+        || fail "$recipe must not include the Sway-only Voxtype module"
 done
 
 mapfile -t matrix_recipes < <(sed -n '/^[[:space:]]*recipe:$/,/^[[:space:]]*steps:$/p' \
     "$repo_root/.github/workflows/build.yml" \
     | sed -n 's/^[[:space:]]*- \(recipe-[^[:space:]]*\.yml\)$/\1/p')
-[[ "${matrix_recipes[*]}" == "${recipes[*]}" ]] \
-    || fail "CI build matrix must contain only: ${recipes[*]}"
+[[ "${matrix_recipes[*]}" == "${all_recipes[*]}" ]] \
+    || fail "CI build matrix must contain only: ${all_recipes[*]}"
 
-for recipe in "${recipes[@]}"; do
+for recipe in "${all_recipes[@]}"; do
     image=${recipe#recipe-}
     image=${image%.yml}
     grep -Fqx -- "- $image" "$readme" || fail "README does not list $image"
@@ -77,6 +86,19 @@ elif [[ "$*" == '--user enable --now voxtype.service' ]]; then
 fi
 MOCK
 chmod +x "$tmp_dir/bin/voxtype" "$tmp_dir/bin/systemctl"
+
+missing_home="$tmp_dir/home-missing-voxtype"
+missing_config="$tmp_dir/config-missing-voxtype"
+mkdir -p "$missing_home" "$tmp_dir/empty-bin"
+set +e
+env -i HOME="$missing_home" XDG_CONFIG_HOME="$missing_config" PATH="$tmp_dir/empty-bin" \
+    /usr/bin/bash "$setup_script" > "$tmp_dir/missing-voxtype.out" 2>&1
+missing_status=$?
+set -e
+[[ "$missing_status" -ne 0 ]] || fail "setup succeeds when Voxtype is absent"
+grep -Fq 'Voxtype is only available in MyOS Sway images' "$tmp_dir/missing-voxtype.out" \
+    || fail "missing-Voxtype failure does not explain the Sway-only boundary"
+[[ ! -e "$missing_config" ]] || fail "missing-Voxtype failure leaves config state"
 
 run_setup() {
     local home=$1 config_home=$2 has_service=$3 output=$4 log=$5 enable_status=${6:-0}

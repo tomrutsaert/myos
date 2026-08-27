@@ -10,8 +10,6 @@ modules:
         - qemu-img
         - virtiofsd
         - edk2-ovmf
-        - virt-manager
-        - virt-viewer
         - guestfs-tools
         - python3-libguestfs
   - type: systemd

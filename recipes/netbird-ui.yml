@@ -1,0 +1,12 @@
+modules:
+  - type: dnf
+    repos:
+      cleanup: true
+      files:
+        - netbird.repo
+    install:
+      packages:
+        - netbird-ui
+        - gtk4
+        - webkitgtk6.0
+        - xdg-utils

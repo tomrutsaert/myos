@@ -1,0 +1,13 @@
+modules:
+  - type: dnf
+    install:
+      packages:
+        - mosh
+    remove:
+      packages:
+        # fedora-base includes Firefox; headless images must not provide a local browser.
+        - firefox
+        - firefox-langpacks
+  - type: script
+    scripts:
+      - server-firewall-setup.sh

@@ -1,26 +1,14 @@
 modules:
   - type: dnf
-    repos:
-      cleanup: true
-      files:
-        - vscodium.repo
     install:
-      skip-unavailable: true
       packages:
-        - swappy
         - syncthing
-        - codium
-        - darkman
-        - fprintd-pam
-        - gnome-keyring-pam
         - gcc
         - make
         - patch
         - binutils
         - git
-        - ddcutil
         - NetworkManager-openvpn
-        - NetworkManager-openvpn-gnome
         - openvpn
   - type: systemd
     system:
@@ -28,5 +16,4 @@ modules:
         - sshd.service
     user:
       enabled:
-        - darkman.service
         - syncthing.service

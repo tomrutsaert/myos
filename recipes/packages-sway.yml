@@ -1,0 +1,20 @@
+modules:
+  - type: dnf
+    repos:
+      cleanup: true
+      files:
+        - vscodium.repo
+    install:
+      skip-unavailable: true
+      packages:
+        - swappy
+        - codium
+        - darkman
+        - fprintd-pam
+        - gnome-keyring-pam
+        - ddcutil
+        - NetworkManager-openvpn-gnome
+  - type: systemd
+    user:
+      enabled:
+        - darkman.service

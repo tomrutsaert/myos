@@ -1,37 +1,23 @@
 # Intended image packages
 
-This file documents packages explicitly layered by the MyOS recipes and important packages expected from the base images. Both retained images use Fedora 44 and the same shared Sway layers; the NVIDIA image adds its hardware-specific overlay.
+This file documents packages explicitly layered by the Fedora 44 MyOS recipes and important packages inherited from the base images. Recipe module names make the common, Sway-only, and server-only boundaries explicit.
 
-## Shared package groups
+## Common package groups
 
-### Workstation tools
+### Development and remote access
 
-Layered by `recipes/packages.yml`:
+Layered by `recipes/packages-common.yml`:
 
-- `swappy`
 - `syncthing`
-- `codium`
-- `darkman`
-- `fprintd-pam`
-- `gnome-keyring-pam`
 - `gcc`
 - `make`
 - `patch`
 - `binutils`
 - `git`
-- `ddcutil`
 - `NetworkManager-openvpn`
-- `NetworkManager-openvpn-gnome`
 - `openvpn`
 
-Expected from the base images:
-
-- `procps-ng`
-- `curl`
-- `file`
-- `which`
-- `vim`
-- `openssh-server`
+The shared module enables `sshd.service` and the per-user `syncthing.service`. Expected base-image utilities include `procps-ng`, `curl`, `file`, `which`, `vim`, and `openssh-server`.
 
 ### Per-user Homebrew CLI tools
 
@@ -47,14 +33,7 @@ Selected host-development formulae:
 - `ttyd`
 - `ydiff`
 
-### Voice input
-
-Layered by `recipes/voxtype.yml`:
-
-- `voxtype` v0.7.5 from the pinned upstream RPM
-- `wtype`
-
-Download and configure the per-user model with `ujust voxtype-setup` (or the equivalent `blujust voxtype-setup`).
+The existing ujust recipes also keep Claude Code, Codex, OpenCode, and Pi as per-user installs; no AI coding tool is baked into an image.
 
 ### Docker
 
@@ -67,9 +46,9 @@ Layered by `recipes/docker.yml`:
 - `docker-compose-plugin`
 - `podman`
 
-### Virtualization
+### Virtualization core
 
-Layered by `recipes/virtualization.yml`:
+Layered by `recipes/virtualization.yml` in all images:
 
 - `virt-install`
 - `libvirt-daemon-config-network`
@@ -79,8 +58,6 @@ Layered by `recipes/virtualization.yml`:
 - `qemu-img`
 - `virtiofsd`
 - `edk2-ovmf`
-- `virt-manager`
-- `virt-viewer`
 - `guestfs-tools`
 - `python3-libguestfs`
 
@@ -95,12 +72,27 @@ Layered by `recipes/tailscale.yml`:
 Layered by `recipes/netbird.yml` from NetBird's official RPM repository:
 
 - `netbird`
+
+The shared module enables `netbird.service`. Its graphical client and dependencies are isolated in `recipes/netbird-ui.yml` for Sway images:
+
 - `netbird-ui`
 - `gtk4`
 - `webkitgtk6.0`
 - `xdg-utils`
 
-## Sway package groups
+## Sway-only package groups
+
+### Sway applications
+
+Layered by `recipes/packages-sway.yml`:
+
+- `swappy`
+- `codium`
+- `darkman`
+- `fprintd-pam`
+- `gnome-keyring-pam`
+- `ddcutil`
+- `NetworkManager-openvpn-gnome`
 
 ### Sway desktop
 
@@ -147,71 +139,92 @@ Layered by `recipes/sway.yml`:
 - `pamixer`
 - `android-tools`
 
-Expected from the base images:
-
-- `wireplumber`
-- `polkit`
+Expected from the base images: `wireplumber` and `polkit`.
 
 ### Multimedia codecs
 
-Layered by `recipes/multimedia.yml`:
+`recipes/multimedia.yml` layers the RPM Fusion release packages plus `ffmpeg`, GStreamer codecs, PipeWire extras, HEIF support, Mesa VA-API restricted-codec support, `libva-utils`, and `unrar`.
 
-- RPM Fusion free release RPM for Fedora 44
-- RPM Fusion nonfree release RPM for Fedora 44
-- `ffmpeg`
-- `gstreamer1-plugins-bad-freeworld`
-- `gstreamer1-plugins-ugly`
-- `gstreamer1-plugin-libav`
-- `pipewire-libs-extra`
-- `libheif-freeworld`
-- `heif-pixbuf-loader` (virtual pixbuf-loader capability/provider accepted by BlueBuild)
-- `libheif-tools`
-- `mesa-va-drivers-freeworld`
-- `libva-utils`
-- `unrar`
+### Voice input
 
-Fedora 44 uses `mesa-va-drivers-freeworld` for the current RPM Fusion Mesa restricted-codec support.
+Layered by `recipes/voxtype.yml` in Sway images only:
+
+- `voxtype` v0.7.5 from the pinned upstream RPM
+- `wtype`
+
+Download and configure the per-user model with `ujust voxtype-setup` (or `blujust voxtype-setup`).
+
+### Graphical virtualization
+
+Layered by `recipes/virtualization-ui.yml` in Sway images only:
+
+- `virt-manager`
+- `virt-viewer`
 
 ### Sway NVIDIA overlay
 
 Layered by `recipes/sway-nvidia.yml` for `myos-sway-nvidia` only:
 
 - `libva-nvidia-driver`
-- `/usr/libexec/myos-sway-nvidia-env` with wlroots/NVIDIA session compatibility settings
+- `/usr/libexec/myos-sway-nvidia-env` with wlroots/NVIDIA compatibility settings
 
-NVIDIA driver and akmod packages come from `ghcr.io/blue-build/base-images/fedora-base-nvidia:44`. Secure Boot deployments may require key or MOK enrollment for NVIDIA kernel modules.
+NVIDIA driver and akmod packages come from `ghcr.io/blue-build/base-images/fedora-base-nvidia:44`. The NVIDIA server uses that same base but does not import this Sway overlay.
+
+## Server-only package group
+
+Layered by `recipes/packages-server.yml`:
+
+- `mosh`
+
+The same module removes the `firefox` and `firefox-langpacks` packages inherited from the Fedora base, ensuring that no local browser remains. Mosh is available immediately in server images while remaining in the per-user Homebrew recipe for all images. During image composition, `server-firewall-setup.sh` uses `firewall-offline-cmd --add-service=mosh` to enable only firewalld's predefined `mosh` service in the default zone; firewalld remains enabled and no unrelated ports are opened. Server recipes include no Sway, multimedia, Voxtype, graphical virtualization, or NetBird UI module.
 
 ## Final images
 
 ### `myos-sway-main`
 
-Base image: `ghcr.io/blue-build/base-images/fedora-base:44`
+Base: `ghcr.io/blue-build/base-images/fedora-base:44`
 
-Included groups:
-
-- Sway desktop
-- Multimedia codecs
-- Workstation tools
-- Voice input
+- Common development and remote-access stack
 - Docker
-- Virtualization
+- Virtualization core and UI
 - Tailscale
 - NetBird
+- NetBird UI
+- Sway desktop, applications, multimedia, and voice input
 
 ### `myos-sway-nvidia`
 
-Base image: `ghcr.io/blue-build/base-images/fedora-base-nvidia:44`
+Base: `ghcr.io/blue-build/base-images/fedora-base-nvidia:44`
 
-Included groups:
-
-- Sway desktop
-- Sway NVIDIA overlay
-- Multimedia codecs
-- Workstation tools
-- Voice input
+- Common development and remote-access stack
 - Docker
-- Virtualization
+- Virtualization core and UI
 - Tailscale
 - NetBird
+- NetBird UI
+- Sway desktop, applications, multimedia, and voice input
+- Sway NVIDIA compatibility overlay
 
-NVIDIA driver support is inherited from the BlueBuild NVIDIA base image. MyOS layers only Sway-specific NVIDIA compatibility and VA-API support.
+### `myos-server-main`
+
+Base: `ghcr.io/blue-build/base-images/fedora-base:44`
+
+- Common development and remote-access stack
+- Docker
+- Virtualization core
+- Tailscale
+- NetBird
+- Layered mosh
+- No graphical desktop stack or local browser
+
+### `myos-server-nvidia`
+
+Base: `ghcr.io/blue-build/base-images/fedora-base-nvidia:44`
+
+- Common development and remote-access stack
+- Docker
+- Virtualization core
+- Tailscale
+- NetBird
+- Layered mosh
+- No Sway NVIDIA overlay, graphical desktop stack, or local browser

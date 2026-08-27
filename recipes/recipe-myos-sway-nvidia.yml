@@ -4,17 +4,24 @@ base-image: ghcr.io/blue-build/base-images/fedora-base-nvidia
 image-version: 44
 
 modules:
+  # Shared headless-capable development platform
   - from-file: default-files.yml
-  - from-file: sway.yml
-  - from-file: sway-nvidia.yml
-  - from-file: multimedia.yml
-  - from-file: packages.yml
-  - from-file: voxtype.yml
+  - from-file: packages-common.yml
   - from-file: docker.yml
   - from-file: virtualization.yml
   - from-file: tailscale.yml
   - from-file: netbird.yml
   - from-file: just.yml
+
+  # Sway desktop and graphical applications
+  - from-file: sway.yml
+  - from-file: sway-nvidia.yml
+  - from-file: multimedia.yml
+  - from-file: packages-sway.yml
+  - from-file: voxtype.yml
+  - from-file: virtualization-ui.yml
+  - from-file: netbird-ui.yml
+
   - from-file: os-release.yml
   - type: initramfs
   - type: signing

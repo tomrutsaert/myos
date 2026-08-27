@@ -38,12 +38,7 @@ fi
 
 # Upstream's RPM runs `netbird service install/start` in %post. Make it select
 # systemd while telling systemctl that this is an offline image build.
-SYSTEMD_OFFLINE=1 dnf -y install \
-    netbird \
-    netbird-ui \
-    gtk4 \
-    webkitgtk6.0 \
-    xdg-utils
+SYSTEMD_OFFLINE=1 dnf -y install netbird
 
 # systemd opens the unit's file-backed output before processing LogsDirectory,
 # so provision the parent during early boot instead.

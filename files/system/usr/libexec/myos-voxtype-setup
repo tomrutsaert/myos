@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+if ! command -v voxtype >/dev/null 2>&1; then
+    echo "Voxtype is only available in MyOS Sway images; this setup helper cannot run here." >&2
+    exit 1
+fi
+
 config_home="${XDG_CONFIG_HOME:-$HOME/.config}"
 config_dir="$config_home/voxtype"
 config_file="$config_dir/config.toml"

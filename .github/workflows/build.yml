@@ -22,6 +22,8 @@ jobs:
         recipe:
           - recipe-myos-sway-main.yml
           - recipe-myos-sway-nvidia.yml
+          - recipe-myos-server-main.yml
+          - recipe-myos-server-nvidia.yml
 
     steps:
       - name: Build Custom Image
