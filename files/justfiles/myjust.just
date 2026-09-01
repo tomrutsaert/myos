@@ -204,6 +204,7 @@ install-brew-cli-tools:
     brew install --yes \
       awscli \
       bash-completion@2 \
+      bat \
       btop \
       difftastic \
       exiftool \
@@ -299,9 +300,9 @@ install-brew-fonts:
       font-meslo-lg-nerd-font \
       font-monoid-nerd-font \
       font-mononoki-nerd-font \
-      font-mplus-nerd-font \
+      font-m+-nerd-font \
       font-noto-nerd-font \
-      font-open-dyslexic-nerd-font \
+      font-opendyslexic-nerd-font \
       font-profont-nerd-font \
       font-proggy-clean-tt-nerd-font \
       font-roboto-mono-nerd-font \
