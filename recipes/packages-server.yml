@@ -5,9 +5,25 @@ modules:
         - mosh
     remove:
       packages:
-        # fedora-base includes Firefox; headless images must not provide a local browser.
+        # Remove graphical tooling inherited from fedora-base on headless images.
         - firefox
         - firefox-langpacks
+        - flatpak
+        - flatpak-spawn
+  # The base enables scheduled Flatpak updates; prevent stale units from invoking the removed CLI.
+  - type: systemd
+    system:
+      disabled:
+        - flatpak-system-updates.timer
+      masked:
+        - flatpak-system-updates.service
+        - flatpak-system-updates.timer
+    user:
+      disabled:
+        - flatpak-user-updates.timer
+      masked:
+        - flatpak-user-updates.service
+        - flatpak-user-updates.timer
   - type: script
     scripts:
       - server-firewall-setup.sh

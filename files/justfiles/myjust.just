@@ -1,16 +1,16 @@
 # vim: set ft=make :
 # This file can be modified downstream to add custom just commands
 
-# --- install-all (runs everything) ---
+# --- shared aggregate implementations ---
 
-install-all:
+# Role entrypoints pass their comma-separated installation plan to this helper.
+_install-all steps:
     #!/usr/bin/bash
     set -uo pipefail
     sudo -v
     failed=()
-    for step in set-locale add-user-to-groups fix-docker fix-network-priority \
-      install-brew-all install-flatpaks install-sdkman install-nvm \
-      install-intellij install-datagrip install-zed install-claude install-codex install-opencode install-pi; do
+    IFS=',' read -ra install_steps <<< "{{steps}}"
+    for step in "${install_steps[@]}"; do
       echo "=== Running $step ==="
       ujust "$step" || failed+=("$step")
     done
@@ -66,8 +66,8 @@ fix-network-priority:
 
 # --- update ---
 
-# Update everything: bootc, flatpaks, distroboxes, custom scripts, brew, sdkman, pi, npm, claude
-update-all:
+# Shared updater; role entrypoints decide whether Flatpak is part of the image.
+_update-all update_flatpaks:
     #!/usr/bin/bash
     set -o pipefail
     failed=()
@@ -82,7 +82,9 @@ update-all:
     sudo -v || failed+=("sudo credentials")
 
     run_update "system (bootc)" sudo bootc upgrade
-    run_update "flatpaks" flatpak update -y
+    if [[ "{{update_flatpaks}}" == "true" ]]; then
+      run_update "flatpaks" flatpak update -y
+    fi
     run_update "distroboxes" distrobox upgrade -a
 
     echo "=== Running custom update scripts ==="

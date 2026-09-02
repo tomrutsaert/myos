@@ -11,6 +11,8 @@ The Sway images are graphical workstations. The server images are headless: they
 
 All images retain the shared development/build tools, Docker/Podman, libvirt/QEMU, Tailscale, NetBird, global ujust recipes, defaults, OS release metadata, initramfs generation, and signing. Mosh is layered in server images for immediate remote access, with its predefined firewalld service enabled in the default zone; the per-user Homebrew flow remains available on every image. AI coding tools are not baked into any image and remain per-user installs through the existing ujust recipes.
 
+`ujust install-all` and `ujust update-all` are role-aware. Sway images retain the Flatpak and desktop application steps. Server images run the headless development setup and shared non-Flatpak updates without installing or invoking Flatpak; their Homebrew aggregate intentionally still installs Nerd Fonts as a user preference.
+
 ## Installation
 
 Switch an existing Fedora Atomic or bootc system to the image appropriate for its role and hardware. The MyOS signing policy is not present during the first switch from stock Fedora, so do not enforce it on that initial switch:

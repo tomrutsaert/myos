@@ -13,7 +13,8 @@ modules:
   - from-file: netbird.yml
   - from-file: just.yml
 
-  # Sway desktop and graphical applications
+  # Sway desktop, graphical applications, and desktop ujust aggregates
+  - from-file: just-desktop.yml
   - from-file: sway.yml
   - from-file: sway-nvidia.yml
   - from-file: multimedia.yml

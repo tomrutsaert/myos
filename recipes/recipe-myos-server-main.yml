@@ -13,8 +13,9 @@ modules:
   - from-file: netbird.yml
   - from-file: just.yml
 
-  # Server access; no graphical desktop modules
+  # Server access and headless ujust aggregates; no graphical desktop modules
   - from-file: packages-server.yml
+  - from-file: just-server.yml
 
   - from-file: os-release.yml
   - type: initramfs

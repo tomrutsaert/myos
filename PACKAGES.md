@@ -21,7 +21,7 @@ The shared module enables `sshd.service` and the per-user `syncthing.service`. E
 
 ### Per-user Homebrew CLI tools
 
-Homebrew CLI tools are managed by the global `ujust install-brew-cli-tools` recipe rather than layered or baked into the immutable image. Lima is installed per-user through Homebrew by this ujust recipe.
+Homebrew CLI tools are managed by the global `ujust install-brew-cli-tools` recipe rather than layered or baked into the immutable image. Lima is installed per-user through Homebrew by this ujust recipe. Both desktop and server `ujust install-all` run `install-brew-all`; the server aggregate intentionally retains the Homebrew Nerd Font casks as a user preference.
 
 Selected host-development formulae:
 
@@ -176,7 +176,9 @@ Layered by `recipes/packages-server.yml`:
 
 - `mosh`
 
-The same module removes the `firefox` and `firefox-langpacks` packages inherited from the Fedora base, ensuring that no local browser remains. Mosh is available immediately in server images while remaining in the per-user Homebrew recipe for all images. During image composition, `server-firewall-setup.sh` uses `firewall-offline-cmd --add-service=mosh` to enable only firewalld's predefined `mosh` service in the default zone; firewalld remains enabled and no unrelated ports are opened. Server recipes include no Sway, multimedia, Voxtype, graphical virtualization, or NetBird UI module.
+The same module removes the `firefox`, `firefox-langpacks`, `flatpak`, and `flatpak-spawn` packages inherited from the Fedora base, ensuring that no local browser or Flatpak tooling remains. It also disables and masks the inherited system and per-user Flatpak update units so they cannot invoke the removed CLI. Mosh is available immediately in server images while remaining in the per-user Homebrew recipe for all images. During image composition, `server-firewall-setup.sh` uses `firewall-offline-cmd --add-service=mosh` to enable only firewalld's predefined `mosh` service in the default zone; firewalld remains enabled and no unrelated ports are opened. Server recipes include no Sway, multimedia, Voxtype, graphical virtualization, or NetBird UI module.
+
+Server `ujust install-all` retains locale setup, user groups, Docker and network setup, Homebrew CLI tools and fonts, SDKMAN, NVM, Claude Code, Codex, OpenCode, and Pi. It excludes Flatpaks, IntelliJ IDEA, DataGrip, and Zed. Server `ujust update-all` uses the shared updater for bootc, distroboxes, custom scripts, Homebrew, SDKMAN, Pi, global npm packages, and Claude Code, but does not invoke or require Flatpak. Sway aggregates retain the existing Flatpak installation/update and desktop development application steps.
 
 ## Final images
 
@@ -215,7 +217,7 @@ Base: `ghcr.io/blue-build/base-images/fedora-base:44`
 - Tailscale
 - NetBird
 - Layered mosh
-- No graphical desktop stack or local browser
+- No Flatpak tooling, graphical desktop stack, or local browser
 
 ### `myos-server-nvidia`
 
@@ -227,4 +229,4 @@ Base: `ghcr.io/blue-build/base-images/fedora-base-nvidia:44`
 - Tailscale
 - NetBird
 - Layered mosh
-- No Sway NVIDIA overlay, graphical desktop stack, or local browser
+- No Flatpak tooling, Sway NVIDIA overlay, graphical desktop stack, or local browser
