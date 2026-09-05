@@ -32,6 +32,24 @@ sudo systemctl reboot
 
 The `latest` tag tracks the newest build of Fedora 44 pinned in each recipe; it does not automatically move to a new Fedora major version.
 
+## Switching roles
+
+All four images carry entrypoints for moving between the desktop and server roles. Each one
+derives the sibling image from the booted reference, so an NVIDIA host stays on its
+variant, and each aligns the default systemd target with the new role:
+
+```bash
+ujust switch-to-server
+ujust switch-to-desktop
+sudo systemctl reboot
+```
+
+The default target matters because `/etc/systemd/system/default.target` is local state
+that survives a switch. A server deployment left on `graphical.target` still boots and
+still serves SSH, but it chases a greeter the image no longer contains. Leave
+`/etc/systemd/system/display-manager.service` alone; the image supplies it, so the ostree
+merge adds and removes it with the role.
+
 ## Building an ISO
 
 Build an installer ISO locally with the [BlueBuild CLI](https://blue-build.org/how-to/generate-iso/):

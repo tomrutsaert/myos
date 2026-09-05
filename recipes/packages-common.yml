@@ -10,6 +10,7 @@ modules:
         - git
         - NetworkManager-openvpn
         - openvpn
+        - wol
   - type: systemd
     system:
       enabled:

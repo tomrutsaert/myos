@@ -40,6 +40,12 @@ for recipe_file in "${recipe_files[@]}"; do
     done
     grep -Fqx '  - type: initramfs' "$recipe" || fail "$recipe_file lacks initramfs"
     grep -Fqx '  - type: signing' "$recipe" || fail "$recipe_file lacks signing"
+    assert_import "$recipe" signing-policy.yml
+    awk '
+        $0 == "  - type: signing" { signing=NR }
+        $0 == "  - from-file: signing-policy.yml" { policy=NR }
+        END { exit !(signing && policy == signing + 1) }
+    ' "$recipe" || fail "$recipe_file must extend the generated policy immediately after signing"
 done
 
 sway_modules=(sway.yml multimedia.yml packages-sway.yml voxtype.yml virtualization-ui.yml netbird-ui.yml)
@@ -74,6 +80,20 @@ for image in myos-server-main myos-server-nvidia; do
     done
 done
 
+remount_dropin="$repo_root/files/system/usr/lib/systemd/system/systemd-remount-fs.service.d/10-skip-composefs.conf"
+[[ -f "$remount_dropin" ]] \
+    || fail "composefs remount guard must be in the files shared by every image"
+grep -Fqx 'ConditionPathExists=!/run/ostree/.private/cfsroot-lower' "$remount_dropin" \
+    || fail "remount guard must skip systemd-remount-fs only on composefs deployments"
+
+server_target_script="$repo_root/files/scripts/server-default-target.sh"
+[[ -x "$server_target_script" ]] \
+    || fail "server default-target setup must be an executable image-build script"
+grep -Fqx 'systemctl set-default multi-user.target' "$server_target_script" \
+    || fail "server images must default to multi-user.target"
+grep -Fqx '      - server-default-target.sh' "$recipes_dir/packages-server.yml" \
+    || fail "server image configuration must run the default-target setup"
+
 for image in myos-sway-main myos-server-main; do
     grep -Fqx 'base-image: ghcr.io/blue-build/base-images/fedora-base' "$recipes_dir/recipe-$image.yml" \
         || fail "$image must use fedora-base"
@@ -96,9 +116,9 @@ for gui_package in codium darkman swappy fprintd-pam gnome-keyring-pam NetworkMa
     ! grep -Eq "^[[:space:]]*-[[:space:]]+${gui_package//./\\.}[[:space:]]*$" "$recipes_dir/packages-common.yml" "$recipes_dir/packages-server.yml" \
         || fail "$gui_package must not be common/server-layered"
 done
-for development_package in gcc make patch binutils git syncthing NetworkManager-openvpn openvpn; do
-    grep -Eq "^[[:space:]]*-[[:space:]]+${development_package//./\\.}[[:space:]]*$" "$recipes_dir/packages-common.yml" \
-        || fail "packages-common.yml must contain $development_package"
+for common_package in gcc make patch binutils git syncthing NetworkManager-openvpn openvpn wol; do
+    grep -Eq "^[[:space:]]*-[[:space:]]+${common_package//./\\.}[[:space:]]*$" "$recipes_dir/packages-common.yml" \
+        || fail "packages-common.yml must contain $common_package"
 done
 
 for gui_package in virt-manager virt-viewer; do

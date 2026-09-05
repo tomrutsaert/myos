@@ -1,0 +1,5 @@
+modules:
+  # Extend BlueBuild's generated policy so role switches remain verified.
+  - type: script
+    scripts:
+      - signing-policy.sh

@@ -1,4 +1,8 @@
 modules:
+  - type: files
+    files:
+      - source: server
+        destination: /
   - type: dnf
     install:
       packages:
@@ -27,3 +31,4 @@ modules:
   - type: script
     scripts:
       - server-firewall-setup.sh
+      - server-default-target.sh

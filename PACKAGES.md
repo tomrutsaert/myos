@@ -16,6 +16,7 @@ Layered by `recipes/packages-common.yml`:
 - `git`
 - `NetworkManager-openvpn`
 - `openvpn`
+- `wol`
 
 The shared module enables `sshd.service` and the per-user `syncthing.service`. Expected base-image utilities include `procps-ng`, `curl`, `file`, `which`, `vim`, and `openssh-server`.
 

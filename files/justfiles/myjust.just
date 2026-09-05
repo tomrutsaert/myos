@@ -64,6 +64,77 @@ fix-network-priority:
     nmcli connection up "$conn"
     echo "Route metric for '$conn' set to 40."
 
+# --- image role ---
+
+# Stage the sibling image for the other role and align the default systemd target.
+# Both entrypoints live in the shared justfile so either role can reach the other.
+_switch-role from to target:
+    #!/usr/bin/bash
+    set -euo pipefail
+    observed=$(rpm-ostree status --json \
+      | jq -er '.deployments[] | select(.booted) | ."container-image-reference"')
+    case "$observed" in
+      ostree-unverified-registry:*) current=${observed#ostree-unverified-registry:} ;;
+      ostree-unverified-image:docker://*) current=${observed#ostree-unverified-image:docker://} ;;
+      ostree-unverified-image:registry:*) current=${observed#ostree-unverified-image:registry:} ;;
+      ostree-image-signed:docker://*) current=${observed#ostree-image-signed:docker://} ;;
+      ostree-image-signed:registry:*) current=${observed#ostree-image-signed:registry:} ;;
+      *)
+        echo "Unrecognised booted image reference: $observed" >&2
+        exit 1
+        ;;
+    esac
+    if [[ ! "$current" =~ ^ghcr\.io/tomrutsaert/myos-(sway|server)-(main|nvidia)(:[[:alnum:]_][[:alnum:]_.-]{0,127})?$ ]]; then
+      echo "Unrecognised booted image: $current" >&2
+      exit 1
+    fi
+    current_role=${BASH_REMATCH[1]}
+    case "$current_role" in
+      {{to}})
+        echo "Already running the {{to}} role: $current"
+        if [[ $(systemctl get-default) != {{target}} ]]; then
+          sudo systemctl set-default {{target}}
+          echo "Set the default target to {{target}}."
+        fi
+        exit 0
+        ;;
+      {{from}}) ;;
+      *)
+        echo "Expected the myos-{{from}} or myos-{{to}} role, not $current_role." >&2
+        exit 1
+        ;;
+    esac
+    next=${current/myos-{{from}}-/myos-{{to}}-}
+    current_target=$(systemctl get-default)
+    echo "Current image: $current"
+    echo "Target image:  $next"
+    echo "Default target: $current_target -> {{target}}"
+    read -rp "Proceed? [y/N] " reply
+    if [[ ! "$reply" =~ ^[Yy]$ ]]; then
+      echo "Aborted; nothing was changed."
+      exit 1
+    fi
+    sudo bootc switch --enforce-container-sigpolicy "$next"
+    if [[ "$current_target" != {{target}} ]]; then
+      sudo systemctl set-default {{target}}
+    fi
+    echo
+    echo "Staged $next and set the default target to {{target}}."
+    echo "Reboot to finish: systemctl reboot"
+    echo "Roll back with: sudo bootc rollback (then rerun the opposite ujust switch)"
+
+# Move this system to the headless server image of its hardware variant.
+switch-to-server:
+    #!/usr/bin/bash
+    set -euo pipefail
+    echo "The server image ships no Flatpak runtime, so installed Flatpak apps stop working."
+    echo "Their data stays in /var/lib/flatpak and returns if you switch back."
+    ujust _switch-role sway server multi-user.target
+
+# Move this system to the Sway desktop image of its hardware variant.
+switch-to-desktop:
+    @ujust _switch-role server sway graphical.target
+
 # --- update ---
 
 # Shared updater; role entrypoints decide whether Flatpak is part of the image.

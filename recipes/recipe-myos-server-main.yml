@@ -20,3 +20,4 @@ modules:
   - from-file: os-release.yml
   - type: initramfs
   - type: signing
+  - from-file: signing-policy.yml
