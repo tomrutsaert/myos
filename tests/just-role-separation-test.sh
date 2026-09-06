@@ -93,3 +93,143 @@ grep -Fq 'if [[ "{{update_flatpaks}}" == "true" ]]' <<< "$common_update" \
     || fail "shared updater must contain exactly one role-gated Flatpak invocation"
 
 echo "PASS: role-specific ujust routing and aggregates"
+
+# Execute the shared updater with an isolated HOME/PATH and stubbed commands.
+# Redirect the fixed Homebrew path too, so even a host installation is unreachable.
+test_dir=$(mktemp -d)
+trap 'rm -rf -- "$test_dir"' EXIT
+mock_bin="$test_dir/bin"
+mkdir -p "$mock_bin"
+for command in bash grep sort tail; do
+    ln -s "$(command -v "$command")" "$mock_bin/$command"
+done
+cat > "$test_dir/stub" <<'STUB'
+#!/bin/bash
+name=${0##*/}
+[[ "$name $*" == 'brew shellenv' ]] && exit 0
+printf '%s\n' "$name $*" >> "$COMMAND_LOG"
+[[ "$name" != "${FAIL_TOOL:-}" ]]
+STUB
+chmod +x "$test_dir/stub"
+for command in sudo flatpak distrobox brew pi npm claude; do
+    cp "$test_dir/stub" "$mock_bin/$command"
+done
+
+assert_once() {
+    [[ $(grep -Fxc "$1" "$command_log" || true) -eq 1 ]] \
+        || fail "updater must run '$1' exactly once ($scenario)"
+}
+assert_before() {
+    local first second
+    assert_once "$1"
+    assert_once "$2"
+    first=$(grep -Fnx "$1" "$command_log" | cut -d: -f1)
+    second=$(grep -Fnx "$2" "$command_log" | cut -d: -f1)
+    [[ "$first" -lt "$second" ]] \
+        || fail "'$1' must precede '$2' ($scenario)"
+}
+
+for scenario in desktop server pi-failure npm-failure hook-failure absent-tools; do
+    home="$test_dir/$scenario"
+    command_log="$home/commands"
+    mkdir -p "$home/scripts" "$home/.nvm" "$home/.sdkman/bin" "$home/selected-bin"
+    : > "$command_log"
+    cat > "$home/.nvm/nvm.sh" <<'NVM'
+nvm() {
+    printf '%s\n' "nvm $*" >> "$COMMAND_LOG"
+    export NVM_BIN="$HOME/selected-bin"
+}
+NVM
+    cat > "$home/.sdkman/bin/sdkman-init.sh" <<'SDK'
+sdkman_selfupdate_feature=true
+sdk() {
+    printf '%s\n' "sdk $*" >> "$COMMAND_LOG"
+    if [[ "$*" == 'list java' ]]; then printf '25.0.1-amzn\n'; fi
+}
+__sdk_upgrade() { printf '%s\n' 'sdk upgrade' >> "$COMMAND_LOG"; }
+__sdk_install() { printf '%s\n' "sdk install $*" >> "$COMMAND_LOG"; }
+SDK
+    cat > "$home/selected-bin/pi" <<'PI'
+#!/bin/bash
+printf '%s\n' "selected-pi $*" >> "$COMMAND_LOG"
+[[ "${FAIL_TOOL:-}" != pi ]]
+PI
+    chmod +x "$home/selected-bin/pi"
+    for hook in update upgrade update.sh upgrade.sh; do
+        cat > "$home/scripts/$hook" <<'HOOK'
+#!/bin/bash
+name=${0##*/}
+printf '%s\n' "hook $name" >> "$COMMAND_LOG"
+[[ "$name" != "${FAIL_HOOK:-}" ]]
+HOOK
+    done
+    # Cover executable hooks and the bash fallback for non-executable scripts.
+    chmod +x "$home/scripts/update" "$home/scripts/upgrade.sh"
+    role=true
+    fail_tool=''
+    fail_hook=''
+    case "$scenario" in
+        server) role=false ;;
+        pi-failure) fail_tool=pi ;;
+        npm-failure) fail_tool=npm ;;
+        hook-failure) fail_hook=update ;;
+        absent-tools)
+            rm -rf "$home/.nvm" "$home/.sdkman" "$home/scripts"
+            ;;
+    esac
+    run_bin="$mock_bin"
+    if [[ "$scenario" == absent-tools ]]; then
+        run_bin="$test_dir/minimal-bin"
+        mkdir -p "$run_bin"
+        for command in bash grep sort tail sudo flatpak distrobox; do
+            ln -s "$mock_bin/$command" "$run_bin/$command"
+        done
+    fi
+    printf '%s\n' "$common_update" | sed -e 's/^    //' \
+        -e "s/{{update_flatpaks}}/$role/g" \
+        -e "s|/home/linuxbrew/.linuxbrew/bin/brew|$run_bin/brew|g" > "$home/update.sh"
+    status=0
+    env -i HOME="$home" PATH="$run_bin" COMMAND_LOG="$command_log" \
+        FAIL_TOOL="$fail_tool" FAIL_HOOK="$fail_hook" \
+        /bin/bash "$home/update.sh" > "$home/output" 2>&1 || status=$?
+    case "$scenario" in
+        *-failure)
+            [[ "$status" -ne 0 ]] || fail "updater must aggregate failures ($scenario)"
+            case "$scenario" in
+                pi-failure) failure='Pi' ;;
+                npm-failure) failure='global npm packages' ;;
+                hook-failure) failure="custom script: $home/scripts/update" ;;
+            esac
+            grep -Fqx "Failed update step: $failure" "$home/output" \
+                || fail "aggregate must identify the failed step ($scenario)"
+            ;;
+        *) [[ "$status" -eq 0 ]] || fail "updater must succeed ($scenario): $(cat "$home/output")" ;;
+    esac
+    for step in 'sudo -v' 'sudo bootc upgrade' 'distrobox upgrade -a'; do
+        assert_once "$step"
+    done
+    if [[ "$role" == true ]]; then
+        assert_once 'flatpak update -y'
+    else
+        ! grep -q '^flatpak ' "$command_log" || fail "server updater must not invoke Flatpak"
+    fi
+    if [[ "$scenario" == absent-tools ]]; then
+        [[ $(wc -l < "$command_log") -eq 4 ]] || fail "missing optional tools must be skipped"
+        continue
+    fi
+    for step in 'brew update' 'brew upgrade --yes' 'sdk selfupdate' 'sdk upgrade' \
+        'sdk list java' 'sdk install java 25.0.1-amzn' 'sdk default java 25.0.1-amzn' \
+        'nvm use default' 'npm update -g' 'selected-pi update' 'claude update'; do
+        assert_once "$step"
+        assert_before "$step" 'hook update'
+    done
+    assert_before 'nvm use default' 'npm update -g'
+    assert_before 'npm update -g' 'selected-pi update'
+    for hook in update upgrade update.sh upgrade.sh; do
+        assert_once "hook $hook"
+    done
+    [[ $(grep -Ec '^(selected-pi|pi) update$' "$command_log") -eq 1 ]] \
+        || fail "Pi must be updated exactly once in the selected runtime ($scenario)"
+done
+
+echo "PASS: updater ordering, failure continuation, optional tools and role gating"

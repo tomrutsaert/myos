@@ -158,28 +158,6 @@ _update-all update_flatpaks:
     fi
     run_update "distroboxes" distrobox upgrade -a
 
-    echo "=== Running custom update scripts ==="
-    custom_scripts=(
-      "$HOME/scripts/update"
-      "$HOME/scripts/upgrade"
-      "$HOME/scripts/update.sh"
-      "$HOME/scripts/upgrade.sh"
-    )
-    custom_script_found=false
-    for script in "${custom_scripts[@]}"; do
-      if [ -f "$script" ]; then
-        custom_script_found=true
-        if [ -x "$script" ]; then
-          run_update "custom script: ${script}" "$script"
-        else
-          run_update "custom script: ${script}" bash "$script"
-        fi
-      fi
-    done
-    if [ "$custom_script_found" = false ]; then
-      echo "No custom update scripts found; skipping."
-    fi
-
     echo "=== Updating Homebrew ==="
     if command -v brew &>/dev/null || [ -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
       eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
@@ -224,12 +202,6 @@ _update-all update_flatpaks:
     else
       echo "SDKMAN not installed; skipping."
     fi
-    echo "=== Updating Pi ==="
-    if command -v pi &>/dev/null; then
-      pi update || failed+=("Pi")
-    else
-      echo "Pi not installed; skipping."
-    fi
     echo "=== Updating global npm packages ==="
     export NVM_DIR="$HOME/.nvm"
     if [ -s "$NVM_DIR/nvm.sh" ]; then
@@ -238,11 +210,39 @@ _update-all update_flatpaks:
     else
       echo "NVM not installed; skipping."
     fi
+    echo "=== Updating Pi ==="
+    if command -v pi &>/dev/null; then
+      pi update || failed+=("Pi")
+    else
+      echo "Pi not installed; skipping."
+    fi
     echo "=== Updating Claude Code ==="
     if command -v claude &>/dev/null; then
       claude update || failed+=("Claude Code")
     else
       echo "Claude Code not installed; skipping."
+    fi
+
+    echo "=== Running custom update scripts ==="
+    custom_scripts=(
+      "$HOME/scripts/update"
+      "$HOME/scripts/upgrade"
+      "$HOME/scripts/update.sh"
+      "$HOME/scripts/upgrade.sh"
+    )
+    custom_script_found=false
+    for script in "${custom_scripts[@]}"; do
+      if [ -f "$script" ]; then
+        custom_script_found=true
+        if [ -x "$script" ]; then
+          run_update "custom script: ${script}" "$script"
+        else
+          run_update "custom script: ${script}" bash "$script"
+        fi
+      fi
+    done
+    if [ "$custom_script_found" = false ]; then
+      echo "No custom update scripts found; skipping."
     fi
 
     if [ ${#failed[@]} -eq 0 ]; then
