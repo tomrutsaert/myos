@@ -8,6 +8,7 @@ modules:
       skip-unavailable: true
       packages:
         - swappy
+        - imv
         - codium
         - darkman
         - fprintd-pam

@@ -88,6 +88,7 @@ The shared module enables `netbird.service`. Its graphical client and dependenci
 Layered by `recipes/packages-sway.yml`:
 
 - `swappy`
+- `imv`
 - `codium`
 - `darkman`
 - `fprintd-pam`

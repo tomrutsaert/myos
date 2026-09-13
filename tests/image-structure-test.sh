@@ -110,7 +110,7 @@ for recipe_file in "${recipe_files[@]}"; do
     grep -Fqx 'image-version: 44' "$recipes_dir/$recipe_file" || fail "$recipe_file must target Fedora 44"
 done
 
-for gui_package in codium darkman swappy fprintd-pam gnome-keyring-pam NetworkManager-openvpn-gnome ddcutil; do
+for gui_package in codium darkman swappy imv fprintd-pam gnome-keyring-pam NetworkManager-openvpn-gnome ddcutil; do
     grep -Eq "^[[:space:]]*-[[:space:]]+${gui_package//./\\.}[[:space:]]*$" "$recipes_dir/packages-sway.yml" \
         || fail "packages-sway.yml must contain $gui_package"
     ! grep -Eq "^[[:space:]]*-[[:space:]]+${gui_package//./\\.}[[:space:]]*$" "$recipes_dir/packages-common.yml" "$recipes_dir/packages-server.yml" \
