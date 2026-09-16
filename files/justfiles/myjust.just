@@ -275,6 +275,7 @@ install-brew-cli-tools:
     eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
     echo "Installing CLI tools via Homebrew..."
     brew install --yes \
+      ast-grep \
       awscli \
       bash-completion@2 \
       bat \
@@ -305,8 +306,10 @@ install-brew-cli-tools:
       poppler \
       resvg \
       ripgrep \
+      ruff \
       sevenzip \
       shellcheck \
+      shfmt \
       starship \
       stow \
       superfile \
@@ -314,6 +317,7 @@ install-brew-cli-tools:
       tree-sitter-cli \
       ttyd \
       uv \
+      yamllint \
       yazi \
       ydiff \
       yq \
