@@ -276,6 +276,7 @@ install-brew-cli-tools:
     echo "Installing CLI tools via Homebrew..."
     brew install --yes \
       ast-grep \
+      atlassian/acli/acli \
       awscli \
       bash-completion@2 \
       bat \

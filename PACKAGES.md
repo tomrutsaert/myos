@@ -26,6 +26,7 @@ Homebrew CLI tools are managed by the global `ujust install-brew-cli-tools` reci
 
 Selected host-development formulae:
 
+- `atlassian/acli/acli` (Atlassian CLI)
 - `difftastic`
 - `lima`
 - `mise`
