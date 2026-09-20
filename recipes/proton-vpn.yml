@@ -1,5 +1,8 @@
 modules:
   - type: dnf
+    # Keep the daemon enabled for boot without starting it during the build.
+    env:
+      SYSTEMD_OFFLINE: "1"
     repos:
       cleanup: true
       files:
