@@ -1,0 +1,10 @@
+modules:
+  - type: dnf
+    repos:
+      cleanup: true
+      files:
+        - protonvpn-stable.repo
+    install:
+      install-weak-deps: false
+      packages:
+        - proton-vpn-cli

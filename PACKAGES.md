@@ -82,6 +82,16 @@ The shared module enables `netbird.service`. Its graphical client and dependenci
 - `webkitgtk6.0`
 - `xdg-utils`
 
+### Proton VPN CLI
+
+Installed by `recipes/proton-vpn.yml` in all four images from [Proton's official Fedora repository](https://protonvpn.com/support/official-linux-vpn-fedora), with package signature checks enabled:
+
+- `proton-vpn-cli`
+
+Required dependencies include Proton's daemon, NetworkManager integration, and GNOME Keyring. The recipe disables weak dependencies. Server images also include the required keyring and NetworkManager GUI components, but no desktop session. Proton officially supports Fedora with GNOME; MyOS Sway and headless server sessions are outside that supported configuration. Installing the CLI in a server image does not provide supported headless VPN operation.
+
+After booting an image containing the CLI, run `protonvpn --help` to check availability. In a desktop session with an unlocked keyring, run `protonvpn signin YOUR_USERNAME` with your Proton username, then `protonvpn connect`. Run these commands as your normal user. Use `protonvpn disconnect` to disconnect. See [Proton's CLI guide](https://protonvpn.com/support/use-linux-cli) for more options.
+
 ## Sway-only package groups
 
 ### Sway applications
@@ -195,6 +205,7 @@ Base: `ghcr.io/blue-build/base-images/fedora-base:44`
 - Tailscale
 - NetBird
 - NetBird UI
+- Proton VPN CLI
 - Sway desktop, applications, multimedia, and voice input
 
 ### `myos-sway-nvidia`
@@ -207,6 +218,7 @@ Base: `ghcr.io/blue-build/base-images/fedora-base-nvidia:44`
 - Tailscale
 - NetBird
 - NetBird UI
+- Proton VPN CLI
 - Sway desktop, applications, multimedia, and voice input
 - Sway NVIDIA compatibility overlay
 
@@ -219,6 +231,7 @@ Base: `ghcr.io/blue-build/base-images/fedora-base:44`
 - Virtualization core
 - Tailscale
 - NetBird
+- Proton VPN CLI
 - Layered mosh
 - No Flatpak tooling, graphical desktop stack, or local browser
 
@@ -231,5 +244,6 @@ Base: `ghcr.io/blue-build/base-images/fedora-base-nvidia:44`
 - Virtualization core
 - Tailscale
 - NetBird
+- Proton VPN CLI
 - Layered mosh
 - No Flatpak tooling, Sway NVIDIA overlay, graphical desktop stack, or local browser

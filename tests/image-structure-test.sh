@@ -32,7 +32,7 @@ assert_import() {
         || fail "$(basename "$recipe") must import $module exactly once"
 }
 
-common_modules=(default-files.yml packages-common.yml docker.yml virtualization.yml tailscale.yml netbird.yml just.yml os-release.yml)
+common_modules=(default-files.yml packages-common.yml docker.yml virtualization.yml tailscale.yml netbird.yml proton-vpn.yml just.yml os-release.yml)
 for recipe_file in "${recipe_files[@]}"; do
     recipe="$recipes_dir/$recipe_file"
     for module in "${common_modules[@]}"; do

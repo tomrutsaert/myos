@@ -4,13 +4,14 @@ base-image: ghcr.io/blue-build/base-images/fedora-base-nvidia
 image-version: 44
 
 modules:
-  # Shared headless-capable development platform
+  # Shared development platform
   - from-file: default-files.yml
   - from-file: packages-common.yml
   - from-file: docker.yml
   - from-file: virtualization.yml
   - from-file: tailscale.yml
   - from-file: netbird.yml
+  - from-file: proton-vpn.yml
   - from-file: just.yml
 
   # Server access and headless ujust aggregates; no Sway NVIDIA compatibility or graphical desktop modules
