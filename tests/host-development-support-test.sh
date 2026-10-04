@@ -25,13 +25,13 @@ brew_recipe=$(awk '
     in_recipe { print }
 ' "$brew_justfile")
 
-required_formulae=(difftastic lima mise mkcert mosh ttyd ydiff)
+required_formulae=(difftastic mise mkcert ydiff)
 expected_formula_order=$(printf '%s\n' "${required_formulae[@]}")
 for formula in "${required_formulae[@]}"; do
     grep -Eq "^[[:space:]]+${formula}([[:space:]]*\\\\)?[[:space:]]*$" <<<"$brew_recipe" \
         || fail "install-brew-cli-tools does not explicitly install $formula"
 done
-brew_formula_order=$(grep -E '^[[:space:]]+(difftastic|lima|mise|mkcert|mosh|ttyd|ydiff)([[:space:]]*\\)?[[:space:]]*$' <<<"$brew_recipe" \
+brew_formula_order=$(grep -E '^[[:space:]]+(difftastic|mise|mkcert|ydiff)([[:space:]]*\\)?[[:space:]]*$' <<<"$brew_recipe" \
     | sed -E 's/^[[:space:]]*([^[:space:]]+).*/\1/')
 [[ "$brew_formula_order" == "$expected_formula_order" ]] \
     || fail "required Homebrew formulae are not alphabetized in install-brew-cli-tools"
@@ -59,7 +59,7 @@ for formula in "${required_formulae[@]}"; do
         || fail "PACKAGES.md does not document Homebrew formula $formula"
 done
 markdown_tick=$(printf '\140')
-documented_formula_order=$(grep -E "^- ${markdown_tick}(difftastic|lima|mise|mkcert|mosh|ttyd|ydiff)${markdown_tick}$" <<<"$homebrew_documentation" \
+documented_formula_order=$(grep -E "^- ${markdown_tick}(difftastic|mise|mkcert|ydiff)${markdown_tick}$" <<<"$homebrew_documentation" \
     | sed -E "s/^- ${markdown_tick}([^${markdown_tick}]+).*/\\1/")
 [[ "$documented_formula_order" == "$expected_formula_order" ]] \
     || fail "required Homebrew formulae are not alphabetized in PACKAGES.md"
@@ -67,10 +67,6 @@ for package in podman qemu-img virtiofsd edk2-ovmf qemu-kvm; do
     grep -Fqx -- "- \`$package\`" "$packages_documentation" \
         || fail "PACKAGES.md does not document Fedora package $package"
 done
-grep -Eiq 'Lima.*(per-user|per user)|(per-user|per user).*Lima' <<<"$homebrew_documentation" \
-    || fail "PACKAGES.md does not describe Lima as a per-user install"
-grep -Eiq 'Lima.*Homebrew|Homebrew.*Lima' <<<"$homebrew_documentation" \
-    || fail "PACKAGES.md does not describe Lima as installed through Homebrew"
 grep -Fq 'ujust install-brew-cli-tools' <<<"$homebrew_documentation" \
     || fail "PACKAGES.md does not identify the ujust Homebrew installation recipe"
 grep -Eiq 'not[[:space:]]+(layered|baked)|(not|rather than).*(immutable image)' <<<"$homebrew_documentation" \
@@ -91,4 +87,4 @@ if grep -R -Eq '^[[:space:]]*-[[:space:]]+bootc-image-builder[[:space:]]*$' \
     fail "bootc-image-builder must remain containerized rather than a host package"
 fi
 
-echo "PASS: Lima/bootc host support package and documentation contracts"
+echo "PASS: host development package and documentation contracts"

@@ -22,20 +22,16 @@ The shared module enables `sshd.service` and the per-user `syncthing.service`. E
 
 ### Per-user Homebrew CLI tools
 
-Homebrew CLI tools are managed by the global `ujust install-brew-cli-tools` recipe rather than layered or baked into the immutable image. Lima is installed per-user through Homebrew by this ujust recipe. Both desktop and server `ujust install-all` run `install-brew-all`; the server aggregate intentionally retains the Homebrew Nerd Font casks as a user preference.
+Homebrew CLI tools are managed by the global `ujust install-brew-cli-tools` recipe rather than layered or baked into the immutable image. Both desktop and server `ujust install-all` run `install-brew-all`; the server aggregate intentionally retains the Homebrew Nerd Font casks as a user preference.
 
 Selected host-development formulae:
 
-- `atlassian/acli/acli` (Atlassian CLI)
 - `difftastic`
-- `lima`
 - `mise`
 - `mkcert`
-- `mosh`
-- `ttyd`
 - `ydiff`
 
-The existing ujust recipes also keep Claude Code, Codex, OpenCode, and Pi as per-user installs; no AI coding tool is baked into an image.
+The ujust recipes keep Claude Code, Codex, OpenCode, and Pi as per-user installs; no AI coding tool is baked into an image. `ujust install-pi` installs `@earendil-works/pi-coding-agent` through npm without interactive prompts or lifecycle scripts. It requires Node 22.19.0 or newer and a user-writable npm global prefix. It uses NVM's default Node version when NVM is installed, otherwise the Node/npm on PATH. An existing Pi on PATH, including one exposed by NVM, is left unchanged.
 
 ### Docker
 
@@ -189,9 +185,9 @@ Layered by `recipes/packages-server.yml`:
 
 - `mosh`
 
-The same module removes the `firefox`, `firefox-langpacks`, `flatpak`, and `flatpak-spawn` packages inherited from the Fedora base, ensuring that no local browser or Flatpak tooling remains. It also disables and masks the inherited system and per-user Flatpak update units so they cannot invoke the removed CLI. Mosh is available immediately in server images while remaining in the per-user Homebrew recipe for all images. During image composition, `server-firewall-setup.sh` uses `firewall-offline-cmd --add-service=mosh` to enable only firewalld's predefined `mosh` service in the default zone; firewalld remains enabled and no unrelated ports are opened. Server recipes include no Sway, multimedia, Voxtype, graphical virtualization, or NetBird UI module.
+The same module removes the `firefox`, `firefox-langpacks`, `flatpak`, and `flatpak-spawn` packages inherited from the Fedora base, ensuring that no local browser or Flatpak tooling remains. It also disables and masks the inherited system and per-user Flatpak update units so they cannot invoke the removed CLI. Mosh is available immediately in server images. During image composition, `server-firewall-setup.sh` uses `firewall-offline-cmd --add-service=mosh` to enable only firewalld's predefined `mosh` service in the default zone; firewalld remains enabled and no unrelated ports are opened. Server recipes include no Sway, multimedia, Voxtype, graphical virtualization, or NetBird UI module.
 
-Server `ujust install-all` retains locale setup, user groups, Docker and network setup, Homebrew CLI tools and fonts, SDKMAN, NVM, Claude Code, Codex, OpenCode, and Pi. It excludes Flatpaks, IntelliJ IDEA, DataGrip, and Zed. Server `ujust update-all` runs bootc, distroboxes, Homebrew, SDKMAN, global npm packages, Pi, Claude Code, then custom scripts through the shared updater. It does not invoke or require Flatpak. Sway aggregates retain the existing Flatpak installation/update and desktop development application steps.
+Server `ujust install-all` retains locale setup, Homebrew CLI tools and fonts, SDKMAN, NVM, Claude Code, Codex, OpenCode, and Pi. It excludes Flatpaks, IntelliJ IDEA, DataGrip, and Zed. Server `ujust update-all` runs bootc, distroboxes, Homebrew, SDKMAN, global npm packages, Pi, Claude Code, then custom scripts through the shared updater. It does not invoke or require Flatpak. Sway aggregates retain the existing Flatpak installation/update and desktop development application steps.
 
 ## Final images
 

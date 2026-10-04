@@ -46,9 +46,18 @@ server_install=$(recipe_body install-all "$server_justfile")
 desktop_update=$(recipe_body update-all "$desktop_justfile")
 server_update=$(recipe_body update-all "$server_justfile")
 
-for step in set-locale add-user-to-groups fix-docker fix-network-priority install-brew-all \
+for step in set-locale install-brew-all \
     install-sdkman install-nvm install-claude install-codex install-opencode install-pi; do
     grep -Fwq "$step" <<< "$server_install" || fail "server install-all must include $step"
+done
+# Host network, privileged repair and membership changes require an explicit invocation.
+for step in add-user-to-groups fix-docker fix-network-priority; do
+    ! grep -Fwq "$step" <<< "$desktop_install" \
+        || fail "desktop install-all must exclude opt-in $step"
+    ! grep -Fwq "$step" <<< "$server_install" \
+        || fail "server install-all must exclude opt-in $step"
+    [[ -n "$(recipe_body "$step" "$common_justfile")" ]] \
+        || fail "$step must remain available as a standalone command"
 done
 for step in install-flatpaks install-intellij install-datagrip install-zed; do
     grep -Fwq "$step" <<< "$desktop_install" || fail "desktop install-all must include $step"

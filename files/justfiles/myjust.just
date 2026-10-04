@@ -39,9 +39,6 @@ add-user-to-groups:
     sudo usermod -a -G libvirt $(whoami)
     sudo usermod -a -G docker $(whoami)
 
-set-hostname:
-    sudo hostnamectl set-hostname myos
-
 fix-docker:
     sudo groupadd -f docker
     sudo usermod -a -G docker $(whoami)
@@ -276,17 +273,13 @@ install-brew-cli-tools:
     echo "Installing CLI tools via Homebrew..."
     brew install --yes \
       ast-grep \
-      atlassian/acli/acli \
       awscli \
-      bash-completion@2 \
       bat \
       btop \
       difftastic \
       exiftool \
       fd \
       ffmpeg-full \
-      fzf \
-      git \
       git-delta \
       git-lfs \
       glab \
@@ -295,15 +288,11 @@ install-brew-cli-tools:
       imagemagick \
       lazygit \
       libheif \
-      lima \
-      make \
       media-info \
       mise \
       mkcert \
-      mosh \
       net-tools \
       neovim \
-      nvtop \
       poppler \
       resvg \
       ripgrep \
@@ -314,25 +303,15 @@ install-brew-cli-tools:
       starship \
       stow \
       superfile \
-      tmux \
       tree-sitter-cli \
-      ttyd \
       uv \
       yamllint \
-      yazi \
       ydiff \
       yq \
-      zellij \
       zoxide
     # bashrc additions (idempotent)
     grep -q 'starship init bash' "$HOME/.bashrc" || echo 'eval "$(starship init bash)"' >> "$HOME/.bashrc"
     grep -q 'zoxide init bash' "$HOME/.bashrc" || echo 'eval "$(zoxide init bash)"' >> "$HOME/.bashrc"
-    grep -q 'bash_completion.sh' "$HOME/.bash_profile" 2>/dev/null || \
-      echo '[[ -r "/home/linuxbrew/.linuxbrew/etc/profile.d/bash_completion.sh" ]] && . "/home/linuxbrew/.linuxbrew/etc/profile.d/bash_completion.sh"' >> "$HOME/.bash_profile"
-    # tmux bash completion
-    dir="${BASH_COMPLETION_DIR:-"${XDG_DATA_HOME:-"$HOME/.local/share"}/bash-completion"}/completions"
-    mkdir -p "$dir"
-    curl -fSsL "https://raw.githubusercontent.com/imomaliev/tmux-bash-completion/master/completions/tmux" > "$dir/tmux"
     echo "CLI tools installed. Restart your shell or run: source ~/.bashrc"
 
 install-brew-fonts:
@@ -599,6 +578,16 @@ install-pi:
       echo "Pi is already installed: $(pi --version 2>/dev/null || echo present)"
       exit 0
     fi
+    export NVM_DIR="$HOME/.nvm"
+    if [ -s "$NVM_DIR/nvm.sh" ]; then
+      . "$NVM_DIR/nvm.sh"
+      nvm use default
+    fi
+    if command -v pi &>/dev/null; then
+      echo "Pi is already installed: $(pi --version 2>/dev/null || echo present)"
+      exit 0
+    fi
     echo "Installing Pi..."
-    curl -fsSL https://pi.dev/install.sh | sh
-    echo "Pi installed."
+    npm install -g --ignore-scripts --no-fund --no-audit @earendil-works/pi-coding-agent
+    version=$(pi --version)
+    echo "Pi installed: $version"

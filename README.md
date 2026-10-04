@@ -9,9 +9,11 @@ MyOS provides four Fedora 44 bootc development images:
 
 The Sway images are graphical workstations. The server images are headless: they contain no window manager, desktop session, or local browser and are intended for SSH/mosh access and browser-hosted services. Choose a `-nvidia` image only on NVIDIA hardware. The NVIDIA server inherits its drivers from the NVIDIA base image but does not include the Sway NVIDIA compatibility overlay.
 
-All images retain the shared development/build tools, Docker/Podman, libvirt/QEMU, Tailscale, NetBird, Proton VPN CLI, global ujust recipes, defaults, OS release metadata, initramfs generation, and signing. Proton VPN CLI includes keyring and NetworkManager GUI dependencies; Proton does not support headless CLI operation. See [the package inventory](PACKAGES.md#proton-vpn-cli) for usage requirements. Mosh is layered in server images for immediate remote access, with its predefined firewalld service enabled in the default zone; the per-user Homebrew flow remains available on every image. AI coding tools are not baked into any image and remain per-user installs through the existing ujust recipes.
+All images retain the shared development/build tools, Docker/Podman, libvirt/QEMU, Tailscale, NetBird, Proton VPN CLI, global ujust recipes, defaults, OS release metadata, initramfs generation, and signing. Proton VPN CLI includes keyring and NetworkManager GUI dependencies; Proton does not support headless CLI operation. See [the package inventory](PACKAGES.md#proton-vpn-cli) for usage requirements. Mosh is layered in server images for immediate remote access, with its predefined firewalld service enabled in the default zone. AI coding tools are not baked into any image and remain per-user installs through the existing ujust recipes.
 
 `ujust install-all` and `ujust update-all` are role-aware. Sway images retain the Flatpak and desktop application steps. Server images run the headless development setup and shared non-Flatpak updates without installing or invoking Flatpak; their Homebrew aggregate intentionally still installs Nerd Fonts as a user preference.
+
+Docker repair, group membership changes, and network-priority changes are opt-in: run `ujust fix-docker`, `ujust add-user-to-groups`, or `ujust fix-network-priority` explicitly when needed. None runs as part of `ujust install-all`. Docker services are already enabled by the image; Docker group membership grants root-equivalent access. Log out and back in after changing group membership.
 
 ## Installation
 
